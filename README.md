@@ -47,6 +47,14 @@ Como um gerente e funcionário, eu quero listar os pedidos para acompanhar as ve
 
 - Pedido: possui o nome e telefone do cliente, e contém um ou mais produtos associados. Cada produto tem uma quantidade de no mínimo 1 (um). O valor total do pedido deve ser calculado. 
 
+## Estrutura básica do projeto
+
+- Utilize a estrutura do maven aqui disponibilizada.
+- Instale o Maven
+- Use '>> mvn clean compile assembly:single' para gerar um jar com todas as dependências.
+- Use '>> mvn test' para executar os testes de unidade.
+- Use '>> mvn clean verify' para cobertura de código. Então acesse o relatório em 'firefox target/site/jacoco/index.html'
+
 ## Dúvidas
 
 Para dúvidas sobre os requisitos, abra uma issue com a sua questão. 
