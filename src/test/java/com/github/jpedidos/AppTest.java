@@ -1,7 +1,9 @@
 package com.github.jpedidos;
 
+/*
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+
 
 import org.junit.jupiter.api.Test;
 import java.util.List;
@@ -14,3 +16,4 @@ public class AppTest {
 		assertEquals(1, 1);
 	}
 }
+*/
