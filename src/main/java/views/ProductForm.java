@@ -5,6 +5,8 @@
  */
 package views;
 
+import controllers.ProductController;
+
 /**
  *
  * @author Paulo
@@ -14,8 +16,11 @@ public class ProductForm extends javax.swing.JFrame {
     /**
      * Creates new form ProductForm
      */
-    public ProductForm() {
+    private ProductController _productController;
+    
+    public ProductForm(ProductController productController) {
         initComponents();
+        _productController = productController;
     }
 
     /**
@@ -38,7 +43,7 @@ public class ProductForm extends javax.swing.JFrame {
         txt_scroll = new javax.swing.JScrollPane();
         txt_description = new javax.swing.JTextArea();
         pnl_actions = new javax.swing.JPanel();
-        btn_add = new javax.swing.JButton();
+        btn_clear = new javax.swing.JButton();
         btn_save = new javax.swing.JButton();
         btn_trash = new javax.swing.JButton();
         list_scroll = new javax.swing.JScrollPane();
@@ -117,11 +122,16 @@ public class ProductForm extends javax.swing.JFrame {
                 .addGap(17, 17, 17))
         );
 
-        btn_add.setIcon(new javax.swing.ImageIcon(getClass().getResource("/plus-48.png"))); // NOI18N
-        btn_add.setName("btn_add"); // NOI18N
+        btn_clear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/clean-48.png"))); // NOI18N
+        btn_clear.setName("btn_clear"); // NOI18N
 
         btn_save.setIcon(new javax.swing.ImageIcon(getClass().getResource("/save-48.png"))); // NOI18N
         btn_save.setName("btn_add"); // NOI18N
+        btn_save.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_saveActionPerformed(evt);
+            }
+        });
 
         btn_trash.setIcon(new javax.swing.ImageIcon(getClass().getResource("/trash-48.png"))); // NOI18N
         btn_trash.setName("btn_add"); // NOI18N
@@ -132,7 +142,7 @@ public class ProductForm extends javax.swing.JFrame {
             pnl_actionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnl_actionsLayout.createSequentialGroup()
                 .addGap(34, 34, 34)
-                .addComponent(btn_add, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btn_clear, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btn_trash, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -146,7 +156,7 @@ public class ProductForm extends javax.swing.JFrame {
                 .addGroup(pnl_actionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btn_trash, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_save, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_add, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btn_clear, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -193,43 +203,12 @@ public class ProductForm extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ProductForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ProductForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ProductForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ProductForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ProductForm().setVisible(true);
-            }
-        });
-    }
+    private void btn_saveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_saveActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_saveActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btn_add;
+    private javax.swing.JButton btn_clear;
     private javax.swing.JButton btn_save;
     private javax.swing.JButton btn_trash;
     private javax.swing.JScrollPane jScrollPane2;
