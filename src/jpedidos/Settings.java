@@ -23,7 +23,7 @@ import utils.JPedidosException;
  * @author Paulo
  */
 public class Settings {
-    public static SecretKey SecretKey = AESKey.generateAESKey(124);
+    public static SecretKey SecretKey = AESKey.generateAESKey(128);
     public static String DbHost;
     public static String DbUser;
     public static String DbPass;

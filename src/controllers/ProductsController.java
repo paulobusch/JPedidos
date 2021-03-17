@@ -18,12 +18,12 @@ import validators.UserValidator;
  *
  * @author Paulo
  */
-public class ProductController extends ControllerBase<Product> {
+public class ProductsController extends ControllerBase<Product> {
     private IAuthContext _authContext;
     private IProductRepository _productRepository;
     private ProductValidator _productValidator;
     
-    public ProductController(
+    public ProductsController(
         IAuthContext authContext,
         IProductRepository productRepository,
         ProductValidator productValidator

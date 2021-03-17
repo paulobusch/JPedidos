@@ -11,12 +11,12 @@ import utils.Result;
  *
  * @author Paulo
  */
-public class LoginModel implements IModel<LoginModel> {
+public class LoginModel implements IModel {
     public String login;
     public String password;
 
     @Override
-    public Result validate(LoginModel model) {
+    public Result validate() {
         if (login == null || login.equals(""))
             return Result.Error("O login deve ser informado.");
         if (password == null || password.equals(""))

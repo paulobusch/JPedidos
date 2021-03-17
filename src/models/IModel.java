@@ -5,12 +5,13 @@
  */
 package models;
 
+import utils.Result;
 import validators.IValidator;
 
 /**
  *
  * @author Paulo
  */
-public interface IModel<TModel> extends IValidator<TModel> {
-    
+public interface IModel {
+    Result validate();
 }

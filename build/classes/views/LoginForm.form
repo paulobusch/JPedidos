@@ -7,7 +7,7 @@
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
-    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
+    <SyntheticProperty name="generateCenter" type="boolean" value="true"/>
   </SyntheticProperties>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
@@ -30,12 +30,12 @@
                       <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
                       <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                      <Component id="textField1" pref="229" max="32767" attributes="0"/>
+                      <Component id="txt_login" pref="229" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="jPasswordField1" min="-2" pref="229" max="-2" attributes="0"/>
+                      <Component id="txt_password" min="-2" pref="229" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
@@ -47,7 +47,7 @@
           </Group>
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="32767" attributes="0"/>
-              <Component id="jButton1" min="-2" pref="88" max="-2" attributes="0"/>
+              <Component id="btn_login" min="-2" pref="88" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="145" max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -60,15 +60,15 @@
               <EmptySpace pref="48" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
                   <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
-                  <Component id="textField1" min="-2" max="-2" attributes="0"/>
+                  <Component id="txt_login" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jPasswordField1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txt_password" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
-              <Component id="jButton1" min="-2" pref="36" max="-2" attributes="0"/>
+              <Component id="btn_login" min="-2" pref="36" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -91,7 +91,7 @@
         <Property name="text" type="java.lang.String" value="Usu&#xe1;rio: "/>
       </Properties>
     </Component>
-    <Component class="java.awt.TextField" name="textField1">
+    <Component class="java.awt.TextField" name="txt_login">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Dialog" size="14" style="0"/>
@@ -110,7 +110,7 @@
         <Property name="text" type="java.lang.String" value="Senha: "/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JPasswordField" name="jPasswordField1">
+    <Component class="javax.swing.JPasswordField" name="txt_password">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Dialog" size="14" style="0"/>
@@ -118,7 +118,7 @@
         <Property name="name" type="java.lang.String" value="txt_pass" noResource="true"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton1">
+    <Component class="javax.swing.JButton" name="btn_login">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Dialog" size="14" style="1"/>
@@ -126,6 +126,9 @@
         <Property name="text" type="java.lang.String" value="Entrar"/>
         <Property name="name" type="java.lang.String" value="btn_login" noResource="true"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_loginActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

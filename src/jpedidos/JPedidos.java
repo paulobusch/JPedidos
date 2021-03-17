@@ -5,9 +5,14 @@
  */
 package jpedidos;
 
+import context.AuthContext;
+import context.IAuthContext;
+import controllers.UsersController;
 import database.DatabaseAdapter;
 import javax.swing.JOptionPane;
+import repositories.IUserRepository;
 import utils.JPedidosException;
+import validators.UserValidator;
 import views.LoginForm;
 
 /**
@@ -20,10 +25,20 @@ public class JPedidos {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        //Settings.Load("configuration.properties");
-        //DatabaseAdapter adapter = new DatabaseAdapter();
+        Settings.Load("configuration.properties");
+        DatabaseAdapter adapter = new DatabaseAdapter();
+        
+        IAuthContext context = new AuthContext();
+        
+        IUserRepository userRepository = null;
+        UsersController usersController = new UsersController(
+            context, 
+            userRepository, 
+            new UserValidator(userRepository)
+        );
+        
         try {
-            LoginForm view = new LoginForm();
+            LoginForm view = new LoginForm(usersController);
             view.setVisible(true);
         } catch (JPedidosException e) {
             JOptionPane.showMessageDialog(null, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);

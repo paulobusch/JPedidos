@@ -18,5 +18,6 @@ import java.util.ArrayList;
 public interface IAuthContext {
     boolean isAuthenticated();
     boolean hasPermission(Controller controller, CrudFunctionality functionality);    
-    User getCurrentUser();
+    User getCurrentUser();    
+    void setCurrentUser(User user);
 }

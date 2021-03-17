@@ -38,7 +38,19 @@ public class UsersController extends ControllerBase<User> {
     }
     
     public Result login(LoginModel model) {
-        // TODO: implements this method
+        Result validation = model.validate();
+        if (validation.HasError()) return validation;
+
+        Result defaultError = Result.Error("Usuário ou senha inválidos");
+        boolean existLogin = _userRepository.existByLogin(model.login);
+        if (!existLogin) return defaultError;
+        
+        User user = _userRepository.getByLogin(model.login);
+        boolean validPassword = user.validatePassword(model.password);
+        if (!validPassword) return defaultError;
+       
+        _authContext.setCurrentUser(user);
+        
         return Result.Ok();
     }
 }

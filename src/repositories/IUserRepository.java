@@ -12,6 +12,8 @@ import entities.User;
  * @author Paulo
  */
 public interface IUserRepository extends IRepository<User> {
-    boolean existByEmail(String email, int id);
+    boolean existByLogin(String login);
     boolean existByLogin(String login, int id);
+    boolean existByEmail(String email, int id);
+    User getByLogin(String login);
 }

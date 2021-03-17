@@ -206,7 +206,7 @@
         <Component class="javax.swing.JButton" name="btn_clear">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/clean-48.png"/>
+              <Image iconType="3" name="/assets/clean-48.png"/>
             </Property>
             <Property name="name" type="java.lang.String" value="btn_clear" noResource="true"/>
           </Properties>
@@ -214,7 +214,7 @@
         <Component class="javax.swing.JButton" name="btn_save">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/save-48.png"/>
+              <Image iconType="3" name="/assets/save-48.png"/>
             </Property>
             <Property name="name" type="java.lang.String" value="btn_add" noResource="true"/>
           </Properties>
@@ -225,7 +225,7 @@
         <Component class="javax.swing.JButton" name="btn_trash">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/trash-48.png"/>
+              <Image iconType="3" name="/assets/trash-48.png"/>
             </Property>
             <Property name="name" type="java.lang.String" value="btn_add" noResource="true"/>
           </Properties>

@@ -16,12 +16,12 @@ import utils.JPedidosException;
  * @author Paulo
  */
 public class DatabaseAdapter {
-    private Connection connection;
+    private Connection _connection;
     
     private void connect() {
         if (isConnected()) return;
         try {
-            connection = DriverManager.getConnection(
+            _connection = DriverManager.getConnection(
                 Settings.DbHost,
                 Settings.DbUser,
                 Settings.DbPass
@@ -33,13 +33,13 @@ public class DatabaseAdapter {
     
     public Connection getConnection() {
         connect();
-        return connection;
+        return _connection;
     }
     
     public void disconnect() {
         if (!isConnected()) return;
         try {
-            connection.close();
+            _connection.close();
         } catch (SQLException ex) {
             throw new JPedidosException("Falha ao desconectar do banco de dados", ex);
         }
@@ -49,7 +49,7 @@ public class DatabaseAdapter {
         if (!isConnected()) 
             connect();
         try {
-            connection.commit();
+            _connection.commit();
             return true;
         } catch(SQLException ex) {
             throw new JPedidosException("Falha ao commitar alterações no banco de dados", ex);
@@ -60,16 +60,16 @@ public class DatabaseAdapter {
         if (!isConnected()) 
             connect();
         try {
-            connection.rollback();
+            _connection.rollback();
         } catch(SQLException ex) {
             throw new JPedidosException("Falha ao fazer rollback das alterações no banco de dados", ex);
         }
     }
     
     public boolean isConnected() {
-        if (connection == null) return false;
+        if (_connection == null) return false;
         try {
-            return !connection.isClosed();
+            return !_connection.isClosed();
         } catch(SQLException ex) {
             return false;
         }

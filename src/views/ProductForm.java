@@ -5,7 +5,7 @@
  */
 package views;
 
-import controllers.ProductController;
+import controllers.ProductsController;
 
 /**
  *
@@ -16,9 +16,9 @@ public class ProductForm extends javax.swing.JFrame {
     /**
      * Creates new form ProductForm
      */
-    private ProductController _productController;
+    private ProductsController _productController;
     
-    public ProductForm(ProductController productController) {
+    public ProductForm(ProductsController productController) {
         initComponents();
         _productController = productController;
     }
@@ -122,10 +122,10 @@ public class ProductForm extends javax.swing.JFrame {
                 .addGap(17, 17, 17))
         );
 
-        btn_clear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/clean-48.png"))); // NOI18N
+        btn_clear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/clean-48.png"))); // NOI18N
         btn_clear.setName("btn_clear"); // NOI18N
 
-        btn_save.setIcon(new javax.swing.ImageIcon(getClass().getResource("/save-48.png"))); // NOI18N
+        btn_save.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/save-48.png"))); // NOI18N
         btn_save.setName("btn_add"); // NOI18N
         btn_save.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -133,7 +133,7 @@ public class ProductForm extends javax.swing.JFrame {
             }
         });
 
-        btn_trash.setIcon(new javax.swing.ImageIcon(getClass().getResource("/trash-48.png"))); // NOI18N
+        btn_trash.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/trash-48.png"))); // NOI18N
         btn_trash.setName("btn_add"); // NOI18N
 
         javax.swing.GroupLayout pnl_actionsLayout = new javax.swing.GroupLayout(pnl_actions);
