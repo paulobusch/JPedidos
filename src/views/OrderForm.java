@@ -6,16 +6,17 @@
 package views;
 
 import controllers.OrdersController;
-import controllers.ProductsController;
-import entities.Customer;
 import entities.Order;
 import entities.OrderProduct;
 import entities.User;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import models.SelectOption;
 import utils.Result;
@@ -37,7 +38,11 @@ public class OrderForm extends javax.swing.JFrame {
     private Order _orderCurrent = new Order();
     private OrderProduct _orderProductCurrent;
     
+    private List<SelectOption> _customers;
+    private List<SelectOption> _products;
+    
     private DefaultTableModel _orderTableModel;
+    private DefaultTableModel _orderProductTableModel;
     
     public OrderForm(
         OrdersController ordersController
@@ -49,6 +54,7 @@ public class OrderForm extends javax.swing.JFrame {
         
         loadSelectFields();
         updateTitle();
+        
     }
     
     private void updateTitle() {
@@ -69,7 +75,28 @@ public class OrderForm extends javax.swing.JFrame {
     }
     
     private void setOrder(Order order) {
-        // TODO: implement this method
+        _orderCurrent = order;
+        cb_customer.getModel().setSelectedItem(getCustomerSelected(order.getCustomerId()));
+        
+        clearOrderProductTable();
+        for (OrderProduct op : order.getOrderProducts())
+            addRowOrderProductTable(op);
+    }
+    
+    private SelectOption getCustomerSelected(int id) {
+        for (SelectOption so : _customers) {
+            if (so.value == id) return so;
+        }
+        
+        return new SelectOption();
+    }
+    
+    private SelectOption getProductSelected(int id) {
+        for (SelectOption so : _products) {
+            if (so.value == id) return so;
+        }
+        
+        return new SelectOption();
     }
     
     private OrderProduct getOrderProduct() {
@@ -88,16 +115,22 @@ public class OrderForm extends javax.swing.JFrame {
     }
     
     private void setOrderProduct(OrderProduct orderProduct) {
-        // TODO: implement this method
+        _orderProductCurrent = orderProduct;
+        
+        cb_product.getModel().setSelectedItem(getProductSelected(orderProduct.getProductId()));
+        
     }
     
     private void loadSelectFields() {        
         cb_customer.removeAllItems();
         cb_product.removeAllItems();
         
-        for (SelectOption customer : _ordersController.getCustomersFlat())
+        _customers = _ordersController.getCustomersFlat();
+        _products = _ordersController.getProductsFlat();
+        
+        for (SelectOption customer : _customers)
             cb_customer.addItem(customer);        
-        for (SelectOption product : _ordersController.getProductsFlat())
+        for (SelectOption product : _products)
             cb_product.addItem(product);
     }
     
@@ -113,18 +146,120 @@ public class OrderForm extends javax.swing.JFrame {
         }
     }
     
-    private void clearTable() {
+    private int getTableIdByIndex(DefaultTableModel model, int index) {
+        Object raw = model.getValueAt(index, 0);
+        return Integer.parseInt(raw.toString());
+    }
+    
+    private void clearOrderTable() {
         _orderTableModel.setRowCount(0);
     }
     
-    private void addRowTable(Order order) {
+    private void clearOrderProductTable() {
+        _orderProductTableModel.setRowCount(0);
+    }
+    
+    private ArrayList<Object> getOrderColumnsData(Order order) {
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         ArrayList<Object> columns = new ArrayList<>();
         columns.add(order.getId());
         columns.add(order.getCustomer().getName());
         columns.add(order.getTotal());
         columns.add(df.format(order.getDate()));
-        _orderTableModel.addRow(columns.toArray());
+        return columns;
+    }
+    
+    private ArrayList<Object> getOrderProductColumnsData(OrderProduct orderProduct) {
+        ArrayList<Object> columns = new ArrayList<>();
+        columns.add(orderProduct.getId());
+        columns.add(orderProduct.getProduct().getName());
+        columns.add(orderProduct.getAmount());
+        return columns;
+    }
+    
+    private void addRowOrderTable(Order order) {
+        ArrayList<Object> columnsData = getOrderColumnsData(order);
+        _orderTableModel.addRow(columnsData.toArray());
+    }
+    
+    private void addRowOrderProductTable(OrderProduct orderProduct) {
+        ArrayList<Object> columnsData = getOrderProductColumnsData(orderProduct);
+        _orderProductTableModel.addRow(columnsData.toArray());
+    }
+    
+    private void editRowOrderTable(Order order) {
+        // TODO: implement this method
+    }
+    
+    private void editRowOrderProductTable(OrderProduct orderProduct) {
+        // TODO: implement this method
+    }
+    
+    private void removeRowOrderTable(Order order) {
+        int row = tbl_list_orders.getSelectedRow();
+        int id = getTableIdByIndex(_orderTableModel, row);
+        if (order.getId() == id)
+            _orderTableModel.removeRow(row);
+    }
+    
+    private void removeRowOrderProductTable(OrderProduct orderProduct) {
+        int row = tbl_list_order_products.getSelectedRow();
+        int id = getTableIdByIndex(_orderProductTableModel, row);
+        if (orderProduct.getId() == id)
+            _orderProductTableModel.removeRow(row);
+    }
+    
+    
+    private void orderTableEvents() {
+        ListSelectionModel model = tbl_list_orders.getSelectionModel();
+        model.addListSelectionListener(new ListSelectionListener(){
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                int row = tbl_list_orders.getSelectedRow();
+                if (row == -1) {
+                    setOrder(new Order());
+                    return;
+                }
+                int id = getTableIdByIndex(_orderTableModel, row);
+                ResultData<Order> result = _ordersController.getById(id);
+                if (result.hasError()){
+                    displayResult(Result.error(result.getErrorMessage()));
+                    return;
+                }
+                setOrder(result.getData());
+            }
+        });
+    }
+        
+    private void orderProductTableEvents() {
+        ListSelectionModel model = tbl_list_order_products.getSelectionModel();
+        model.addListSelectionListener(new ListSelectionListener(){
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                int row = tbl_list_order_products.getSelectedRow();
+                if (row == -1) {
+                    setOrderProduct(new OrderProduct());
+                    return;
+                }
+                int id = getTableIdByIndex(_orderProductTableModel, row);
+                for (OrderProduct orderProduct : _orderCurrent.getOrderProducts()) {
+                    if (orderProduct.getId() == id) {
+                        setOrderProduct(orderProduct);
+                        return;
+                    }
+                }
+            }
+        });
+    }
+    
+    private void clearOrderSelection() {
+        tbl_list_orders.clearSelection();
+        setOrder(new Order());  
+    }
+    
+    private void clearOrderProductSelection() {
+        tbl_list_order_products.clearSelection();
+        setOrderProduct(new OrderProduct());  
     }
 
     /**
@@ -150,9 +285,9 @@ public class OrderForm extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tbl_list_order_products = new javax.swing.JTable();
         pnl_actions1 = new javax.swing.JPanel();
-        btn_clear_product = new javax.swing.JButton();
         btn_save_product = new javax.swing.JButton();
         btn_trash_product = new javax.swing.JButton();
+        btn_clear_product = new javax.swing.JButton();
         lbl_name2 = new javax.swing.JLabel();
         cb_product = new javax.swing.JComboBox();
         lbl_name3 = new javax.swing.JLabel();
@@ -183,33 +318,35 @@ public class OrderForm extends javax.swing.JFrame {
         pnl_fieldsLayout.setHorizontalGroup(
             pnl_fieldsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnl_fieldsLayout.createSequentialGroup()
-                .addGap(51, 51, 51)
+                .addGap(36, 36, 36)
                 .addComponent(lbl_name)
                 .addGap(18, 18, 18)
-                .addComponent(cb_customer, javax.swing.GroupLayout.PREFERRED_SIZE, 460, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(cb_customer, javax.swing.GroupLayout.PREFERRED_SIZE, 547, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
                 .addComponent(btn_add_customer, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addGap(40, 40, 40))
         );
         pnl_fieldsLayout.setVerticalGroup(
             pnl_fieldsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnl_fieldsLayout.createSequentialGroup()
+                .addGap(25, 25, 25)
                 .addGroup(pnl_fieldsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnl_fieldsLayout.createSequentialGroup()
-                        .addGap(26, 26, 26)
-                        .addGroup(pnl_fieldsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lbl_name)
-                            .addComponent(cb_customer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(pnl_fieldsLayout.createSequentialGroup()
-                        .addGap(16, 16, 16)
-                        .addComponent(btn_add_customer, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(17, Short.MAX_VALUE))
+                    .addComponent(btn_add_customer, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(pnl_fieldsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lbl_name)
+                        .addComponent(cb_customer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(8, Short.MAX_VALUE))
         );
 
         btn_clear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/clean-48.png"))); // NOI18N
         btn_clear.setName("btn_clear"); // NOI18N
+        btn_clear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_clearActionPerformed(evt);
+            }
+        });
 
-        btn_save.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/save-48.png"))); // NOI18N
+        btn_save.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/save-all-48.png"))); // NOI18N
         btn_save.setName("btn_add"); // NOI18N
         btn_save.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -219,13 +356,18 @@ public class OrderForm extends javax.swing.JFrame {
 
         btn_trash.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/trash-48.png"))); // NOI18N
         btn_trash.setName("btn_add"); // NOI18N
+        btn_trash.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_trashActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnl_actionsLayout = new javax.swing.GroupLayout(pnl_actions);
         pnl_actions.setLayout(pnl_actionsLayout);
         pnl_actionsLayout.setHorizontalGroup(
             pnl_actionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnl_actionsLayout.createSequentialGroup()
-                .addGap(34, 34, 34)
+                .addGap(32, 32, 32)
                 .addComponent(btn_clear, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btn_trash, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -267,9 +409,6 @@ public class OrderForm extends javax.swing.JFrame {
         list_scroll.setViewportView(tbl_list_orders);
         if (tbl_list_orders.getColumnModel().getColumnCount() > 0) {
             tbl_list_orders.getColumnModel().getColumn(0).setPreferredWidth(1);
-            tbl_list_orders.getColumnModel().getColumn(1).setPreferredWidth(8);
-            tbl_list_orders.getColumnModel().getColumn(2).setPreferredWidth(1);
-            tbl_list_orders.getColumnModel().getColumn(3).setPreferredWidth(1);
         }
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Produtos"));
@@ -294,9 +433,9 @@ public class OrderForm extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(tbl_list_order_products);
-
-        btn_clear_product.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/clean-48.png"))); // NOI18N
-        btn_clear_product.setName("btn_clear"); // NOI18N
+        if (tbl_list_order_products.getColumnModel().getColumnCount() > 0) {
+            tbl_list_order_products.getColumnModel().getColumn(0).setPreferredWidth(1);
+        }
 
         btn_save_product.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/save-48.png"))); // NOI18N
         btn_save_product.setName("btn_add"); // NOI18N
@@ -308,6 +447,19 @@ public class OrderForm extends javax.swing.JFrame {
 
         btn_trash_product.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/trash-48.png"))); // NOI18N
         btn_trash_product.setName("btn_add"); // NOI18N
+        btn_trash_product.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_trash_productActionPerformed(evt);
+            }
+        });
+
+        btn_clear_product.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/clean-48.png"))); // NOI18N
+        btn_clear_product.setName("btn_clear"); // NOI18N
+        btn_clear_product.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_clear_productActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnl_actions1Layout = new javax.swing.GroupLayout(pnl_actions1);
         pnl_actions1.setLayout(pnl_actions1Layout);
@@ -315,7 +467,7 @@ public class OrderForm extends javax.swing.JFrame {
             pnl_actions1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnl_actions1Layout.createSequentialGroup()
                 .addComponent(btn_clear_product, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 345, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 501, Short.MAX_VALUE)
                 .addComponent(btn_trash_product, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btn_save_product, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -325,9 +477,9 @@ public class OrderForm extends javax.swing.JFrame {
             .addGroup(pnl_actions1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnl_actions1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btn_clear_product, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_trash_product, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_save_product, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_clear_product, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btn_save_product, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(16, Short.MAX_VALUE))
         );
 
@@ -347,25 +499,25 @@ public class OrderForm extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(68, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(lbl_name2)
-                        .addGap(18, 18, 18)
-                        .addComponent(cb_product, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(28, 28, 28)
-                        .addComponent(lbl_name3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(txt_product_amount, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 513, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(pnl_actions1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(pnl_actions1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                            .addComponent(lbl_name2)
+                            .addGap(18, 18, 18)
+                            .addComponent(cb_product, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lbl_name3)
+                            .addGap(16, 16, 16)
+                            .addComponent(txt_product_amount, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 669, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(27, 27, 27))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(7, Short.MAX_VALUE)
+                .addContainerGap(18, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbl_name2)
                     .addComponent(cb_product, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -385,16 +537,16 @@ public class OrderForm extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(pnl_fields, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(list_scroll, javax.swing.GroupLayout.DEFAULT_SIZE, 673, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(list_scroll)
                             .addComponent(pnl_actions, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(pnl_fields, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addContainerGap())))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(38, 38, 38))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -402,11 +554,12 @@ public class OrderForm extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(pnl_fields, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(pnl_actions, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(list_scroll, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(list_scroll, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -426,9 +579,9 @@ public class OrderForm extends javax.swing.JFrame {
         }
         
         if (byInsert) {
-            // TODO: insert in table
+            addRowOrderTable(order);
         } else {
-            // TODO: update in table
+            editRowOrderTable(order);
         }
     }//GEN-LAST:event_btn_saveActionPerformed
 
@@ -457,8 +610,16 @@ public class OrderForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_save_productActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        _orderTableModel = (DefaultTableModel)tbl_list_orders.getModel();
-        clearTable();
+        _orderTableModel = (DefaultTableModel)tbl_list_orders.getModel();                       
+        _orderProductTableModel = (DefaultTableModel)tbl_list_order_products.getModel();
+        orderTableEvents();
+        orderProductTableEvents();
+        
+        clearOrderTable();
+        clearOrderProductTable();
+        
+        clearOrderSelection();
+        clearOrderProductSelection();
         
         ResultData<ArrayList<Order>> result = _ordersController.getAll();
         if (result.hasError()){
@@ -467,9 +628,42 @@ public class OrderForm extends javax.swing.JFrame {
         }
         
         for (Order order : result.getData()) {
-            addRowTable(order);
+            addRowOrderTable(order);
         }
     }//GEN-LAST:event_formWindowOpened
+
+    private void btn_clearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_clearActionPerformed
+        clearOrderSelection();
+    }//GEN-LAST:event_btn_clearActionPerformed
+
+    private void btn_clear_productActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_clear_productActionPerformed
+        clearOrderProductSelection();
+    }//GEN-LAST:event_btn_clear_productActionPerformed
+
+    private void btn_trashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_trashActionPerformed
+        int option = JOptionPane.showConfirmDialog(this, "Deseja excluir o pedido?", "Excluir", JOptionPane.OK_CANCEL_OPTION);
+        if(option != JOptionPane.OK_OPTION) return;
+        Order order = getOrder();
+        Result result = _ordersController.delete(order.getId());
+        if (result.hasError()) {
+            displayResult(result);
+            return;        
+        }
+        
+        removeRowOrderTable(order);
+        setOrder(new Order());
+    }//GEN-LAST:event_btn_trashActionPerformed
+
+    private void btn_trash_productActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_trash_productActionPerformed
+        int option = JOptionPane.showConfirmDialog(this, "Deseja excluir o produto do pedido?", "Excluir", JOptionPane.OK_CANCEL_OPTION);
+        if(option != JOptionPane.OK_OPTION) return;
+        Order order = getOrder();
+        OrderProduct orderProduct = getOrderProduct();
+        order.removeProduct(orderProduct);
+        
+        removeRowOrderProductTable(orderProduct);
+        setOrderProduct(new OrderProduct());
+    }//GEN-LAST:event_btn_trash_productActionPerformed
 
     
     // Variables declaration - do not modify//GEN-BEGIN:variables

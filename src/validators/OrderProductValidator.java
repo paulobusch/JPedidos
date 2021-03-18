@@ -22,7 +22,7 @@ public class OrderProductValidator implements IValidator<OrderProduct> {
         if (orderProduct.getId() > 0 && orderProduct.getOrderId()== 0 && orderProduct.getOrder()== null)
             return Result.error("O pedido deve ser informado.");
         if (orderProduct.getAmount() < 1)
-            return Result.error("A quantidade ménima de produtos é um.");
+            return Result.error("A quantidade mínima de produtos é um.");
         
         return Result.ok();
     }

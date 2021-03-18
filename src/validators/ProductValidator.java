@@ -22,7 +22,7 @@ public class ProductValidator implements IValidator<Product> {
         if (product.getDescription()== null || product.getDescription().equals(""))
             return Result.error("A descrição do produto deve ser informada.");
         if (product.getPrice() > 0)
-            return Result.error("A quantidade de produtos deve ser maior que um.");
+            return Result.error("O preço do produto deve ser informado.");
         return Result.ok();
     }
     
