@@ -5,6 +5,8 @@
  */
 package views;
 
+import javafx.application.Application;
+
 /**
  *
  * @author Paulo
@@ -27,7 +29,53 @@ public class MainForm extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        mi_products = new javax.swing.JMenuItem();
+        mi_customers = new javax.swing.JMenuItem();
+        mi_orders = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
+        mi_exit = new javax.swing.JMenuItem();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jMenu1.setText("Cadastros");
+        jMenu1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+
+        mi_products.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        mi_products.setText("Produtos");
+        jMenu1.add(mi_products);
+
+        mi_customers.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        mi_customers.setText("Clientes");
+        jMenu1.add(mi_customers);
+
+        mi_orders.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        mi_orders.setText("Pedidos");
+        mi_orders.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mi_ordersActionPerformed(evt);
+            }
+        });
+        jMenu1.add(mi_orders);
+
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Ajuda");
+        jMenu2.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+
+        mi_exit.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        mi_exit.setText("Sair");
+        mi_exit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mi_exitActionPerformed(evt);
+            }
+        });
+        jMenu2.add(mi_exit);
+
+        jMenuBar1.add(jMenu2);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -37,12 +85,20 @@ public class MainForm extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 347, Short.MAX_VALUE)
+            .addGap(0, 322, Short.MAX_VALUE)
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void mi_ordersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mi_ordersActionPerformed
+        new OrderForm().setVisible(true);
+    }//GEN-LAST:event_mi_ordersActionPerformed
+
+    private void mi_exitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mi_exitActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_mi_exitActionPerformed
 
     /**
      * @param args the command line arguments
@@ -81,5 +137,12 @@ public class MainForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem mi_customers;
+    private javax.swing.JMenuItem mi_exit;
+    private javax.swing.JMenuItem mi_orders;
+    private javax.swing.JMenuItem mi_products;
     // End of variables declaration//GEN-END:variables
 }
