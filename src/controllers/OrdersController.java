@@ -8,7 +8,12 @@ package controllers;
 import context.IAuthContext;
 import entities.Order;
 import enums.Controller;
+import java.util.ArrayList;
+import models.SelectOption;
+import repositories.CustomerRepository;
+import repositories.ICustomerRepository;
 import repositories.IOrderRepository;
+import repositories.IProductRepository;
 import repositories.IRepository;
 import validators.IValidator;
 import validators.OrderValidator;
@@ -20,18 +25,31 @@ import validators.OrderValidator;
 public class OrdersController extends ControllerBase<Order> {
     private IAuthContext _authContext;
     private IOrderRepository _orderRepository;
+    private ICustomerRepository _customerRepository;
+    private IProductRepository _productRepository;
     private OrderValidator _orderValidator;
     
     public OrdersController(
         IAuthContext authContext, 
         IOrderRepository orderRepository, 
+        ICustomerRepository customerRepository, 
+        IProductRepository productRepository,
         OrderValidator orderValidator
     ) {
         super(Controller.Orders, authContext, orderRepository, orderValidator);
         
         _authContext = authContext;
         _orderRepository = orderRepository;
+        _customerRepository = customerRepository;
+        _productRepository = productRepository;
         _orderValidator = orderValidator;
     }
     
+    public ArrayList<SelectOption> getCustomersFlat() {
+        return _customerRepository.getAllFlat();
+    }
+    
+    public ArrayList<SelectOption> getProductsFlat() {
+        return _productRepository.getAllFlat();
+    }
 }

@@ -5,6 +5,7 @@
  */
 package views;
 
+import controllers.OrdersController;
 import controllers.UsersController;
 import javax.swing.JOptionPane;
 import models.LoginModel;
@@ -20,10 +21,15 @@ public class LoginForm extends javax.swing.JFrame {
      * Creates new form LoginFrame
      */
     private UsersController _usersController;
+    private OrdersController _ordersController;
     
-    public LoginForm(UsersController usersController) {
+    public LoginForm(
+        UsersController usersController,
+        OrdersController ordersController
+    ) {
         initComponents();
         _usersController = usersController;
+        _ordersController = ordersController;
     }
 
     /**
@@ -137,7 +143,7 @@ public class LoginForm extends javax.swing.JFrame {
             return;
         }
         
-        new MainForm().setVisible(true);
+        new MainForm(_ordersController).setVisible(true);
         
         this.dispose();
     }//GEN-LAST:event_btn_loginActionPerformed

@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import utils.JPedidosException;
 
@@ -42,7 +43,7 @@ public class UserRepository implements IUserRepository {
             result.next();
             return result.getBoolean(1);
         } catch(SQLException ex) {
-            throw new JPedidosException("Falha na execução da consulta de usuári pelo login", ex);
+            throw new JPedidosException("Falha na execução da consulta de usuário pelo login", ex);
         }
     }
 
@@ -63,7 +64,7 @@ public class UserRepository implements IUserRepository {
             result.next();
             return result.getBoolean(1);
         } catch(SQLException ex) {
-            throw new JPedidosException("Falha na execução da consulta de usuári pelo login com id", ex);
+            throw new JPedidosException("Falha na execução da consulta de usuário pelo login com id", ex);
         }
     }
 
@@ -84,7 +85,7 @@ public class UserRepository implements IUserRepository {
             result.next();
             return result.getBoolean(1);
         } catch(SQLException ex) {
-            throw new JPedidosException("Falha na execução da consulta de usuári pelo email", ex);
+            throw new JPedidosException("Falha na execução da consulta de usuário pelo email", ex);
         }
     }
 
@@ -104,7 +105,7 @@ public class UserRepository implements IUserRepository {
             result.next();
             return mapUser(result);
         } catch(SQLException ex) {
-            throw new JPedidosException("Falha na execução da consulta de usuári pelo login", ex);
+            throw new JPedidosException("Falha na execução da consulta de usuário pelo login", ex);
         }
     }
 
@@ -133,12 +134,12 @@ public class UserRepository implements IUserRepository {
         String sql = "select * from users";
         Connection connection = _adapter.getConnection();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql,
+            Statement statement = connection.createStatement(
                 ResultSet.TYPE_SCROLL_SENSITIVE,
                 ResultSet.CONCUR_READ_ONLY
             );
             
-            ResultSet result = preparedStatement.executeQuery();
+            ResultSet result = statement.executeQuery(sql);
             ArrayList<User> users = new ArrayList<User>();
             while(result.next())
                 users.add(mapUser(result));

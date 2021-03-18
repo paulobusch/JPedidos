@@ -7,11 +7,13 @@ package repositories;
 
 import entities.Order;
 import entities.Product;
+import java.util.ArrayList;
+import models.SelectOption;
 
 /**
  *
  * @author Paulo
  */
 public interface IProductRepository extends IRepository<Product> {
-    
+    ArrayList<SelectOption> getAllFlat();
 }

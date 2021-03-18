@@ -5,6 +5,10 @@
  */
 package views;
 
+import controllers.OrdersController;
+import java.util.ArrayList;
+import models.SelectOption;
+
 /**
  *
  * @author Paulo
@@ -14,8 +18,31 @@ public class OrderForm extends javax.swing.JFrame {
     /**
      * Creates new form OrderForm
      */
-    public OrderForm() {
+    private OrdersController _ordersController;
+    
+    public OrderForm(OrdersController ordersController) {
         initComponents();
+        
+        _ordersController = ordersController;
+        
+        fillCustomers();
+        fillProducts();
+    }
+    
+    private void fillCustomers() {
+        ArrayList<SelectOption> customers = _ordersController.getCustomersFlat();
+        
+        cb_customer.removeAllItems();
+        for (SelectOption customer : customers)
+            cb_customer.addItem(customer);
+    }
+    
+    private void fillProducts() {
+        ArrayList<SelectOption> products = _ordersController.getProductsFlat();
+        
+        cb_product.removeAllItems();
+        for (SelectOption product : products)
+            cb_product.addItem(product);
     }
 
     /**
@@ -55,7 +82,6 @@ public class OrderForm extends javax.swing.JFrame {
         lbl_name.setText("Cliente:");
 
         cb_customer.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        cb_customer.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         btn_add_customer.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/plus-48.png"))); // NOI18N
         btn_add_customer.setName("btn_add"); // NOI18N
@@ -216,7 +242,6 @@ public class OrderForm extends javax.swing.JFrame {
         lbl_name2.setText("Produto:");
 
         cb_product.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        cb_product.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         lbl_name3.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         lbl_name3.setText("Quantidade:");
@@ -305,41 +330,6 @@ public class OrderForm extends javax.swing.JFrame {
     private void btn_save1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_save1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btn_save1ActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(OrderForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(OrderForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(OrderForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(OrderForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new OrderForm().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_add_customer;

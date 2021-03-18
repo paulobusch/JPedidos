@@ -7,14 +7,25 @@ package jpedidos;
 
 import context.AuthContext;
 import context.IAuthContext;
+import controllers.OrdersController;
 import controllers.UsersController;
 import database.DatabaseAdapter;
+import entities.User;
 import javax.swing.JOptionPane;
+import repositories.CustomerRepository;
+import repositories.ICustomerRepository;
+import repositories.IOrderRepository;
+import repositories.IProductRepository;
 import repositories.IUserRepository;
+import repositories.OrderRepository;
+import repositories.ProductRepository;
 import repositories.UserRepository;
 import utils.JPedidosException;
+import validators.CustomerValidator;
+import validators.OrderValidator;
 import validators.UserValidator;
 import views.LoginForm;
+import views.OrderForm;
 
 /**
  *
@@ -32,14 +43,36 @@ public class JPedidos {
         IAuthContext context = new AuthContext();
         
         IUserRepository userRepository = new UserRepository(adapter);
+        IOrderRepository orderRepository = new OrderRepository(adapter);
+        IProductRepository productRepository = new ProductRepository(adapter);
+        ICustomerRepository customerRepository = new CustomerRepository(adapter);
+        
+        UserValidator userValidator = new UserValidator(userRepository);
+        CustomerValidator customerValidator = new CustomerValidator();
+        OrderValidator orderValidator = new OrderValidator(customerValidator);
+        
         UsersController usersController = new UsersController(
             context, 
             userRepository, 
-            new UserValidator(userRepository)
+            userValidator
+        );
+        OrdersController ordersController = new OrdersController(
+            context,
+            orderRepository,
+            customerRepository,
+            productRepository,
+            orderValidator
         );
         
+        
         try {
-            new LoginForm(usersController).setVisible(true);
+            //new LoginForm(usersController).setVisible(true);
+            
+            // by pass
+            User user = userRepository.getByLogin("admin");
+            context.setCurrentUser(user);
+            
+            new OrderForm(ordersController).setVisible(true);
         } catch (JPedidosException e) {
             JOptionPane.showMessageDialog(null, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
             System.out.println(e.toString());

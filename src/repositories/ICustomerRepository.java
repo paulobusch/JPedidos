@@ -6,11 +6,13 @@
 package repositories;
 
 import entities.Customer;
+import java.util.ArrayList;
+import models.SelectOption;
 
 /**
  *
  * @author Paulo
  */
 public interface ICustomerRepository extends IRepository<Customer> {
-    
+    ArrayList<SelectOption> getAllFlat();
 }

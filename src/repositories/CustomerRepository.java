@@ -6,7 +6,7 @@
 package repositories;
 
 import database.DatabaseAdapter;
-import entities.Product;
+import entities.Customer;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,17 +19,17 @@ import utils.JPedidosException;
  *
  * @author Paulo
  */
-public class ProductRepository implements IProductRepository {
+public class CustomerRepository implements ICustomerRepository {
 
     private DatabaseAdapter _adapter;
     
-    public ProductRepository(DatabaseAdapter adapter) {
+    public CustomerRepository(DatabaseAdapter adapter) {
         _adapter = adapter;
     }
 
     @Override
     public ArrayList<SelectOption> getAllFlat() {
-        String sql = "select id, name from products";
+        String sql = "select id, name from customers";
         Connection connection = _adapter.getConnection();
         try {
             Statement statement = connection.createStatement(
@@ -54,27 +54,27 @@ public class ProductRepository implements IProductRepository {
     }
 
     @Override
-    public Product getById(int id) {
+    public Customer getById(int id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public ArrayList<Product> getAll() {
+    public ArrayList<Customer> getAll() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void create(Product entity) {
+    public void create(Customer entity) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void update(Product entity) {
+    public void update(Customer entity) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void delete(Product entity) {
+    public void delete(Customer entity) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
