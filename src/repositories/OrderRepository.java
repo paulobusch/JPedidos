@@ -6,6 +6,7 @@
 package repositories;
 
 import database.DatabaseAdapter;
+import entities.Customer;
 import entities.Order;
 import entities.OrderProduct;
 import entities.User;
@@ -13,6 +14,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import utils.JPedidosException;
@@ -36,7 +38,26 @@ public class OrderRepository implements IOrderRepository {
 
     @Override
     public ArrayList<Order> getAll() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String sql = "select o.id, o.customer_id, c.name as customer_name, sum(p.price) as total_price, o.date from orders o\n" +
+            "join customers c on c.id=o.customer_id\n" +
+            "join orders_products op on op.order_id=o.id\n" +
+            "join products p on p.id=op.product_id"; 
+        Connection connection = _adapter.getConnection();
+        try {
+            Statement statement = connection.createStatement(
+                ResultSet.TYPE_SCROLL_SENSITIVE,
+                ResultSet.CONCUR_READ_ONLY
+            );
+            
+            ResultSet result = statement.executeQuery(sql);
+            ArrayList<Order> orders = new ArrayList<Order>();
+            while(result.next())
+                orders.add(mapOrderList(result));
+            
+            return orders;
+        } catch(SQLException ex) {
+            throw new JPedidosException("Falha na execução da consulta de usuário pelo id", ex);
+        }
     }
 
     @Override
@@ -109,6 +130,23 @@ public class OrderRepository implements IOrderRepository {
     @Override
     public void delete(Order entity) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    private Order mapOrderList(ResultSet cursor) {
+        try {
+            Customer customer = new Customer();
+            customer.setId(cursor.getInt("customer_id"));
+            customer.setName(cursor.getString("customer_name"));
+            
+            Order order = new Order();
+            order.setId(cursor.getInt("id"));
+            order.setCustomer(customer);
+            order.setTotal(cursor.getDouble("total_price"));
+            order.setDate(cursor.getDate("date"));
+            return order;
+        } catch(SQLException ex) {
+            throw new JPedidosException("Falha ao mapear Order list", ex);
+        }
     }
     
     private void mapOrderParams(PreparedStatement preparedStatement, Order order) {

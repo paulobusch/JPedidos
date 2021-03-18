@@ -20,7 +20,7 @@ public class ResultData<Type> {
     }
     
     protected ResultData(Type data) {
-        data = data;
+        this.data = data;
     }
     
     public static <Type> ResultData<Type> ok(Type data) {
