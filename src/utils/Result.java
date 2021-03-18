@@ -17,15 +17,15 @@ public class Result {
         this.errorMessage = error;
     }
     
-    public static Result Ok() {
+    public static Result ok() {
         return new Result();
     }
     
-    public static Result Error(String error) {
+    public static Result error(String error) {
         return new Result(error);
     }
     
-    public boolean HasError() {
+    public boolean hasError() {
         return errorMessage != null && !errorMessage.equals("");
     }
     

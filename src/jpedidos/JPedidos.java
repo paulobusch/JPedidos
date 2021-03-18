@@ -8,6 +8,7 @@ package jpedidos;
 import context.AuthContext;
 import context.IAuthContext;
 import controllers.OrdersController;
+import controllers.ProductsController;
 import controllers.UsersController;
 import database.DatabaseAdapter;
 import entities.User;
@@ -22,7 +23,9 @@ import repositories.ProductRepository;
 import repositories.UserRepository;
 import utils.JPedidosException;
 import validators.CustomerValidator;
+import validators.OrderProductValidator;
 import validators.OrderValidator;
+import validators.ProductValidator;
 import validators.UserValidator;
 import views.LoginForm;
 import views.OrderForm;
@@ -49,7 +52,9 @@ public class JPedidos {
         
         UserValidator userValidator = new UserValidator(userRepository);
         CustomerValidator customerValidator = new CustomerValidator();
-        OrderValidator orderValidator = new OrderValidator(customerValidator);
+        ProductValidator productValidator = new ProductValidator();
+        OrderProductValidator orderProductValidator = new OrderProductValidator(); 
+        OrderValidator orderValidator = new OrderValidator(orderProductValidator);
         
         UsersController usersController = new UsersController(
             context, 
@@ -63,6 +68,11 @@ public class JPedidos {
             productRepository,
             orderValidator
         );
+        ProductsController productsController = new ProductsController(
+            context,
+            productRepository,
+            productValidator
+        );
         
         
         try {
@@ -72,7 +82,7 @@ public class JPedidos {
             User user = userRepository.getByLogin("admin");
             context.setCurrentUser(user);
             
-            new OrderForm(ordersController).setVisible(true);
+            new OrderForm(ordersController, productsController).setVisible(true);
         } catch (JPedidosException e) {
             JOptionPane.showMessageDialog(null, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
             System.out.println(e.toString());

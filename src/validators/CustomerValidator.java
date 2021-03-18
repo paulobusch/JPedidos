@@ -18,15 +18,15 @@ public class CustomerValidator implements IValidator<Customer> {
     @Override
     public Result validate(Customer customer) {
         if (customer.getName() == null || customer.getName().equals(""))
-            return Result.Error("O nome do cliente deve ser informado.");
+            return Result.error("O nome do cliente deve ser informado.");
         
         if (customer.getPhone()== null || customer.getPhone().equals(""))
-            return Result.Error("O telefone do cliente deve ser informado.");
+            return Result.error("O telefone do cliente deve ser informado.");
         
         if (!Validator.validatePhone(customer.getPhone()))
-            return Result.Error("O telefone do cliente deve ser válido.");
+            return Result.error("O telefone do cliente deve ser válido.");
         
-        return Result.Ok();
+        return Result.ok();
     }
     
 }

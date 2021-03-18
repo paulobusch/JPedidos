@@ -19,11 +19,12 @@ public class AuthContext implements IAuthContext {
     
     @Override
     public boolean isAuthenticated() {
-        return true;
+        return _currentUser != null;
     }
 
     @Override
     public boolean hasPermission(Controller controller, CrudFunctionality functionality) {
+        // TODO: implement this method
         return true;
     }
 

@@ -18,12 +18,12 @@ public class ProductValidator implements IValidator<Product> {
     @Override
     public Result validate(Product product) {
         if (product.getName() == null || product.getName().equals(""))
-            return Result.Error("O nome deve ser informado.");
+            return Result.error("O nome do produto deve ser informado.");
         if (product.getDescription()== null || product.getDescription().equals(""))
-            return Result.Error("A descrição deve ser informada.");
+            return Result.error("A descrição do produto deve ser informada.");
         if (product.getPrice() > 0)
-            return Result.Error("A quantidade de produtos deve ser maior que um.");
-        return Result.Ok();
+            return Result.error("A quantidade de produtos deve ser maior que um.");
+        return Result.ok();
     }
     
 }

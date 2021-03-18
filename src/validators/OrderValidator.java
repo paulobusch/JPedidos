@@ -6,6 +6,8 @@
 package validators;
 
 import entities.Order;
+import entities.OrderProduct;
+import entities.Product;
 import utils.Result;
 
 /**
@@ -13,24 +15,30 @@ import utils.Result;
  * @author Paulo
  */
 public class OrderValidator implements IValidator<Order> {
-    private CustomerValidator _customerValidator;
+
+    private OrderProductValidator _orderProductValidator;
     
-    public OrderValidator(CustomerValidator customerValidator) {
-        _customerValidator = customerValidator;
+    public OrderValidator(OrderProductValidator orderProductValidator) {
+        _orderProductValidator = orderProductValidator;
     }
     
     @Override
     public Result validate(Order order) {
         if (order.getUserId() <= 0)
-            return Result.Error("A operação deve ser realizada por um usuário logado.");
+            return Result.error("A operação deve ser realizada por um usuário logado.");
         
         if (order.getCustomerId() == 0 && order.getCustomer() == null)
-            return Result.Error("Deve ser informado o cliente.");
+            return Result.error("Deve ser informado o cliente.");
         
-        Result validationCustomerResult = _customerValidator.validate(order.getCustomer());
-        if (validationCustomerResult.HasError()) return validationCustomerResult;
+        if (order.getOrderProducts() == null || order.getOrderProducts().isEmpty())
+            return Result.error("O pedido deve ter produtos.");
         
-        return Result.Ok();
+        for (OrderProduct orderProduct : order.getOrderProducts()) {
+            Result productValidation = _orderProductValidator.validate(orderProduct);
+            if (productValidation.hasError()) return productValidation;
+        }
+        
+        return Result.ok();
     }
     
 }

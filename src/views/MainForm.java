@@ -6,6 +6,7 @@
 package views;
 
 import controllers.OrdersController;
+import controllers.ProductsController;
 import javafx.application.Application;
 
 /**
@@ -19,11 +20,16 @@ public class MainForm extends javax.swing.JFrame {
      */
     
     private OrdersController _ordersController;
+    private ProductsController _productsController;
     
-    public MainForm(OrdersController ordersController) {
+    public MainForm(
+        OrdersController ordersController,        
+        ProductsController productsController
+    ) {
         initComponents();
         
         _ordersController = ordersController;
+        _productsController = productsController;
     }
 
     /**
@@ -99,7 +105,7 @@ public class MainForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void mi_ordersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mi_ordersActionPerformed
-        new OrderForm(_ordersController).setVisible(true);
+        new OrderForm(_ordersController, _productsController).setVisible(true);
     }//GEN-LAST:event_mi_ordersActionPerformed
 
     private void mi_exitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mi_exitActionPerformed

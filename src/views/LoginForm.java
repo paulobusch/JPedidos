@@ -6,6 +6,7 @@
 package views;
 
 import controllers.OrdersController;
+import controllers.ProductsController;
 import controllers.UsersController;
 import javax.swing.JOptionPane;
 import models.LoginModel;
@@ -22,14 +23,17 @@ public class LoginForm extends javax.swing.JFrame {
      */
     private UsersController _usersController;
     private OrdersController _ordersController;
+    private ProductsController _productsController;
     
     public LoginForm(
         UsersController usersController,
-        OrdersController ordersController
+        OrdersController ordersController,
+        ProductsController productsController
     ) {
         initComponents();
         _usersController = usersController;
         _ordersController = ordersController;
+        _productsController = productsController;
     }
 
     /**
@@ -133,7 +137,7 @@ public class LoginForm extends javax.swing.JFrame {
     
     private void btn_loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_loginActionPerformed
         Result result = _usersController.login(this.getLodinModel());
-        if (result.HasError()) {
+        if (result.hasError()) {
             JOptionPane.showMessageDialog(
                 this, 
                 result.getErrorMessage(), 
@@ -143,7 +147,7 @@ public class LoginForm extends javax.swing.JFrame {
             return;
         }
         
-        new MainForm(_ordersController).setVisible(true);
+        new MainForm(_ordersController, _productsController).setVisible(true);
         
         this.dispose();
     }//GEN-LAST:event_btn_loginActionPerformed

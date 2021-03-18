@@ -6,8 +6,13 @@
 package views;
 
 import controllers.OrdersController;
+import controllers.ProductsController;
+import entities.Customer;
+import entities.Order;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import models.SelectOption;
+import utils.Result;
 
 /**
  *
@@ -19,30 +24,49 @@ public class OrderForm extends javax.swing.JFrame {
      * Creates new form OrderForm
      */
     private OrdersController _ordersController;
+    private ProductsController _productsController;
     
-    public OrderForm(OrdersController ordersController) {
+    private Order _orderCurrent = new Order();
+    
+    public OrderForm(
+        OrdersController ordersController,
+        ProductsController productsController
+    ) {
         initComponents();
         
         _ordersController = ordersController;
+        _productsController = productsController;;
         
-        fillCustomers();
-        fillProducts();
+        loadSelectFields();
     }
     
-    private void fillCustomers() {
-        ArrayList<SelectOption> customers = _ordersController.getCustomersFlat();
+    private Order getOrder() {
+        Order order = _orderCurrent;
         
+        Customer customerSelected = cb_customer.getSelectedItem() != null
+            ? (Customer)cb_customer.getSelectedItem()
+            : null;
+        order.setCustomer(customerSelected);
+        
+        return order;
+    }
+    
+    private void setOrder(Order order) {
+        // TODO: implement this method
+    }
+    
+    private void loadSelectFields() {        
         cb_customer.removeAllItems();
-        for (SelectOption customer : customers)
-            cb_customer.addItem(customer);
+        cb_product.removeAllItems();
+        
+        for (SelectOption customer : _ordersController.getCustomersFlat())
+            cb_customer.addItem(customer);        
+        for (SelectOption product : _ordersController.getProductsFlat())
+            cb_product.addItem(product);
     }
     
-    private void fillProducts() {
-        ArrayList<SelectOption> products = _ordersController.getProductsFlat();
-        
-        cb_product.removeAllItems();
-        for (SelectOption product : products)
-            cb_product.addItem(product);
+    private void displayResult(Result result) {
+        JOptionPane.showMessageDialog(this, result.getErrorMessage(), "Informação", JOptionPane.INFORMATION_MESSAGE);
     }
 
     /**
@@ -320,7 +344,22 @@ public class OrderForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_saveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_saveActionPerformed
-        // TODO add your handling code here:
+        Order order = getOrder();
+        boolean byInsert = _orderCurrent.getId() == 0;
+        Result result = byInsert
+            ? _ordersController.create(order)
+            : _ordersController.update(order);
+        
+        if (result.hasError()){
+            displayResult(result);
+            return;
+        }
+        
+        if (byInsert) {
+            // TODO: insert in table
+        } else {
+            // TODO: update in table
+        }
     }//GEN-LAST:event_btn_saveActionPerformed
 
     private void btn_add_customerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_add_customerActionPerformed
@@ -331,6 +370,8 @@ public class OrderForm extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btn_save1ActionPerformed
 
+    
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_add_customer;
     private javax.swing.JButton btn_clear;

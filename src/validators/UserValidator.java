@@ -25,27 +25,27 @@ public class UserValidator implements IValidator<User> {
     @Override
     public Result validate(User user) {
         if (user.getName() == null || user.getName().equals(""))
-            return Result.Error("O nome deve ser informado.");
+            return Result.error("O nome deve ser informado.");
         if (user.getLogin() == null || user.getLogin().equals(""))
-            return Result.Error("O login deve ser informado.");
+            return Result.error("O login deve ser informado.");
         if (user.getPassword() == null || user.getPassword().equals(""))
-            return Result.Error("A senha deve ser informada.");
+            return Result.error("A senha deve ser informada.");
         if (user.getEmail() == null || user.getEmail().equals(""))
-            return Result.Error("O email deve ser informado.");
+            return Result.error("O email deve ser informado.");
         if (!Validator.validateEmailAddress(user.getEmail()))
-            return Result.Error("O email deve ser válido.");
+            return Result.error("O email deve ser válido.");
         if (user.getRole() == null)
-            return Result.Error("O papel deve ser informado.");
+            return Result.error("O papel deve ser informado.");
         
         boolean existLogin = _userRepository.existByLogin(user.getLogin(), user.getId());
         if (existLogin)
-            return Result.Error("Já existe um usuário com este login cadastrado.");
+            return Result.error("Já existe um usuário com este login cadastrado.");
         
         boolean existEmail = _userRepository.existByEmail(user.getEmail(), user.getId());
         if (existEmail)
-            return Result.Error("Já existe um usuário com este email cadastrado.");
+            return Result.error("Já existe um usuário com este email cadastrado.");
         
-        return Result.Ok();
+        return Result.ok();
     }
     
 }

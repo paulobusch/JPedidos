@@ -8,6 +8,7 @@ package controllers;
 import context.IAuthContext;
 import entities.Order;
 import enums.Controller;
+import enums.CrudFunctionality;
 import java.util.ArrayList;
 import models.SelectOption;
 import repositories.CustomerRepository;
@@ -15,6 +16,7 @@ import repositories.ICustomerRepository;
 import repositories.IOrderRepository;
 import repositories.IProductRepository;
 import repositories.IRepository;
+import utils.Result;
 import validators.IValidator;
 import validators.OrderValidator;
 
@@ -43,6 +45,26 @@ public class OrdersController extends ControllerBase<Order> {
         _customerRepository = customerRepository;
         _productRepository = productRepository;
         _orderValidator = orderValidator;
+    }
+    
+    @Override
+    public Result create(Order order) {
+        if (_authContext.isAuthenticated()) {
+            int userId = _authContext.getCurrentUser().getId();
+            order.setUserId(userId);
+        }
+        
+        return super.create(order);
+    }
+    
+    @Override
+    public Result update(Order order) {
+        if (_authContext.isAuthenticated()) {
+            int userId = _authContext.getCurrentUser().getId();
+            order.setUserId(userId);
+        }
+        
+        return super.update(order);
     }
     
     public ArrayList<SelectOption> getCustomersFlat() {

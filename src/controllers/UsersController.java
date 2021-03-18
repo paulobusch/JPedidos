@@ -39,9 +39,9 @@ public class UsersController extends ControllerBase<User> {
     
     public Result login(LoginModel model) {
         Result validation = model.validate();
-        if (validation.HasError()) return validation;
+        if (validation.hasError()) return validation;
 
-        Result defaultError = Result.Error("Usuário ou senha inválidos");
+        Result defaultError = Result.error("Usuário ou senha inválidos");
         boolean existLogin = _userRepository.existByLogin(model.login);
         if (!existLogin) return defaultError;
         
@@ -51,6 +51,6 @@ public class UsersController extends ControllerBase<User> {
        
         _authContext.setCurrentUser(user);
         
-        return Result.Ok();
+        return Result.ok();
     }
 }

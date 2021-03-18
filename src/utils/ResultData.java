@@ -23,15 +23,15 @@ public class ResultData<Type> {
         data = data;
     }
     
-    public static <Type> ResultData<Type> Ok(Type data) {
+    public static <Type> ResultData<Type> ok(Type data) {
         return new ResultData<Type>(data);
     }
     
-    public static <Type> ResultData<Type> Error(String error) {
+    public static <Type> ResultData<Type> error(String error) {
         return new ResultData<Type>(error);
     }
     
-    public boolean HasError() {
+    public boolean hasError() {
         return errorMessage != null && !errorMessage.equals("");
     }
     

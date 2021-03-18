@@ -22,6 +22,6 @@ public class SelectOption implements IModel {
 
     @Override
     public Result validate() {
-        return Result.Ok();
+        return Result.ok();
     }
 }
