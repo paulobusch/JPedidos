@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import models.SelectOption;
 import utils.Result;
+import validators.OrderProductValidator;
 
 /**
  *
@@ -25,18 +26,17 @@ public class OrderForm extends javax.swing.JFrame {
      * Creates new form OrderForm
      */
     private OrdersController _ordersController;
-    private ProductsController _productsController;
+    private OrderProductValidator _orderProductValidator;
     
     private Order _orderCurrent = new Order();
     
     public OrderForm(
-        OrdersController ordersController,
-        ProductsController productsController
+        OrdersController ordersController
     ) {
         initComponents();
         
         _ordersController = ordersController;
-        _productsController = productsController;;
+        _orderProductValidator = ordersController.getValidator().getOrderProductValidator();
         
         loadSelectFields();
         updateTitle();

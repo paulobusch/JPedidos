@@ -147,7 +147,7 @@ public class LoginForm extends javax.swing.JFrame {
             return;
         }
         
-        new MainForm(_ordersController, _productsController).setVisible(true);
+        new MainForm(_ordersController).setVisible(true);
         
         this.dispose();
     }//GEN-LAST:event_btn_loginActionPerformed

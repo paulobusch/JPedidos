@@ -82,7 +82,7 @@ public class JPedidos {
             User user = userRepository.getByLogin("admin");
             context.setCurrentUser(user);
             
-            new OrderForm(ordersController, productsController).setVisible(true);
+            new OrderForm(ordersController).setVisible(true);
         } catch (JPedidosException e) {
             JOptionPane.showMessageDialog(null, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
             System.out.println(e.toString());

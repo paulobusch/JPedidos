@@ -47,6 +47,10 @@ public class OrdersController extends ControllerBase<Order> {
         _orderValidator = orderValidator;
     }
     
+    public OrderValidator getValidator() {
+        return _orderValidator;
+    }
+    
     @Override
     public Result create(Order order) {
         if (_authContext.isAuthenticated()) {

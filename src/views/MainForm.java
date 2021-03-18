@@ -9,6 +9,7 @@ import controllers.OrdersController;
 import controllers.ProductsController;
 import entities.User;
 import javafx.application.Application;
+import validators.OrderProductValidator;
 
 /**
  *
@@ -21,16 +22,13 @@ public class MainForm extends javax.swing.JFrame {
      */
     
     private OrdersController _ordersController;
-    private ProductsController _productsController;
     
     public MainForm(
-        OrdersController ordersController,        
-        ProductsController productsController
+        OrdersController ordersController
     ) {
         initComponents();
         
         _ordersController = ordersController;
-        _productsController = productsController;
         updateTitle();
     }
     
@@ -112,7 +110,7 @@ public class MainForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void mi_ordersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mi_ordersActionPerformed
-        new OrderForm(_ordersController, _productsController).setVisible(true);
+        new OrderForm(_ordersController).setVisible(true);
     }//GEN-LAST:event_mi_ordersActionPerformed
 
     private void mi_exitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mi_exitActionPerformed

@@ -19,16 +19,69 @@ import utils.JPedidosException;
  *
  * @author Paulo
  */
-public class ProductRepository {
-  public int id;
-  public String name;
-  public String description;
-  public double price;
-  public int qtd;
-  public String created_at;
-  public String updated_at;
 
 
+public class ProductRepository implements IProductRepository {
+    private DatabaseAdapter _adapter;
+
+    public ProductRepository(DatabaseAdapter adapter) {
+        _adapter = adapter;
+    }
+    
+    @Override
+    public ArrayList<SelectOption> getAllFlat() {
+        String sql = "select id, name from products";
+        Connection connection = _adapter.getConnection();
+        try {
+            Statement statement = connection.createStatement(
+                ResultSet.TYPE_SCROLL_SENSITIVE,
+                ResultSet.CONCUR_READ_ONLY
+            );
+
+            ResultSet result = statement.executeQuery(sql);
+
+            ArrayList<SelectOption> options = new ArrayList<>();
+            while (result.next()) {
+                SelectOption option = new SelectOption();
+                option.value = result.getInt("id");
+                option.text = result.getString("name");
+                options.add(option);
+            }
+
+            return options;
+        } catch(SQLException ex) {
+            throw new JPedidosException("Falha na execução da consulta de produtos", ex);
+        }
+    }
+
+    @Override
+    public Product getById(int id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public ArrayList<Product> getAll() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void create(Product entity) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void update(Product entity) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void delete(Product entity) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+
+  // TODO: fix build
+  /*
   public static ProductRepository find(int id) throws SQLException {
         ConexaoBD connect = new ConexaoBD();
         ProductRepository findedProductRepository = newProductRepository();
@@ -130,6 +183,7 @@ public class ProductRepository {
   
     ps.executeUpdate();
   }
+  */
     
 
 }

@@ -22,6 +22,10 @@ public class OrderValidator implements IValidator<Order> {
         _orderProductValidator = orderProductValidator;
     }
     
+    public OrderProductValidator getOrderProductValidator() {
+        return _orderProductValidator;
+    }
+    
     @Override
     public Result validate(Order order) {
         if (order.getUserId() <= 0)
