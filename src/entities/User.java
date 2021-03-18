@@ -68,9 +68,33 @@ public class User extends EntityBase {
     public Role getRole() {
         return role;
     }
+    
+    public String getRoleString() {
+        if (this.role == Role.Admin) return "Admin"; 
+        if (this.role == Role.Gerente) return "Gerente"; 
+        if (this.role == Role.Funcionario) return "Funcionário"; 
+        
+        return null;
+    }
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public void setRole(String role) {
+        switch (role) {
+            case "Admin": 
+                this.role = Role.Admin;
+                return;
+            case "Gerente": 
+                this.role = Role.Gerente;
+                return;
+            case "Funcionário": 
+                this.role = Role.Funcionario;
+                return;
+        }
+        
+        this.role = null;
     }
     
     

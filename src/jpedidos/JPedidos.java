@@ -11,6 +11,7 @@ import controllers.UsersController;
 import database.DatabaseAdapter;
 import javax.swing.JOptionPane;
 import repositories.IUserRepository;
+import repositories.UserRepository;
 import utils.JPedidosException;
 import validators.UserValidator;
 import views.LoginForm;
@@ -30,7 +31,7 @@ public class JPedidos {
         
         IAuthContext context = new AuthContext();
         
-        IUserRepository userRepository = null;
+        IUserRepository userRepository = new UserRepository(adapter);
         UsersController usersController = new UsersController(
             context, 
             userRepository, 
@@ -38,8 +39,7 @@ public class JPedidos {
         );
         
         try {
-            LoginForm view = new LoginForm(usersController);
-            view.setVisible(true);
+            new LoginForm(usersController).setVisible(true);
         } catch (JPedidosException e) {
             JOptionPane.showMessageDialog(null, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
             System.out.println(e.toString());

@@ -134,7 +134,12 @@ public class LoginForm extends javax.swing.JFrame {
                 "Informação", 
                 JOptionPane.INFORMATION_MESSAGE
             );
+            return;
         }
+        
+        new MainForm().setVisible(true);
+        
+        this.dispose();
     }//GEN-LAST:event_btn_loginActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -18,7 +18,7 @@ public class LoginModel implements IModel {
     @Override
     public Result validate() {
         if (login == null || login.equals(""))
-            return Result.Error("O login deve ser informado.");
+            return Result.Error("O usuário deve ser informado.");
         if (password == null || password.equals(""))
             return Result.Error("A senha deve ser informada.");
         return Result.Ok();
