@@ -28,7 +28,7 @@ public class Settings {
     public static String DbUser;
     public static String DbPass;
     public static String DbDriver;
-    public static Map<Role, List<ControllerFunctionalities>> permissions = PermissionsByRole.permissions();
+    public static Map<Role, List<ControllerFunctionalities>> Permissions = PermissionsByRole.permissions();
     
     public static void Load(String path) {
         File fileSettings = new File(path);

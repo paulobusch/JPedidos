@@ -8,6 +8,10 @@ package context;
 import entities.User;
 import enums.Controller;
 import enums.CrudFunctionality;
+import static enums.CrudFunctionality.List;
+import java.util.List;
+import jpedidos.Settings;
+import permissions.ControllerFunctionalities;
 
 /**
  *
@@ -24,8 +28,17 @@ public class AuthContext implements IAuthContext {
 
     @Override
     public boolean hasPermission(Controller controller, CrudFunctionality functionality) {
-        // TODO: implement this method
-        return true;
+        if (!isAuthenticated()) return false;
+        List<ControllerFunctionalities> controllerFunctionalities = Settings.Permissions.get(_currentUser.getRole());
+        for (ControllerFunctionalities cf : controllerFunctionalities) {
+            if (cf.getController() != controller) continue;
+            for (CrudFunctionality f : cf.getFunctionalities()) {
+                if (f != functionality) continue;
+                return true;
+            }
+        }
+        
+        return false;
     }
 
     @Override

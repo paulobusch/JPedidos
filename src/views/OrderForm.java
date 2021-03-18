@@ -9,6 +9,7 @@ import controllers.OrdersController;
 import controllers.ProductsController;
 import entities.Customer;
 import entities.Order;
+import entities.User;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import models.SelectOption;
@@ -38,6 +39,12 @@ public class OrderForm extends javax.swing.JFrame {
         _productsController = productsController;;
         
         loadSelectFields();
+        updateTitle();
+    }
+    
+    private void updateTitle() {
+        User currentUser = _ordersController.getCurrentUser();
+        setTitle("JPedidos - Pedidos (" + currentUser.getRoleString() + ")");
     }
     
     private Order getOrder() {

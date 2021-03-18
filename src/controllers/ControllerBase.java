@@ -7,6 +7,7 @@ package controllers;
 
 import context.IAuthContext;
 import entities.EntityBase;
+import entities.User;
 import enums.Controller;
 import enums.CrudFunctionality;
 import java.util.ArrayList;
@@ -35,6 +36,10 @@ public class ControllerBase<TEntity extends EntityBase> {
         _validator = validator;
         _controller = controller;
         _authContext = authContext;
+    }
+    
+    public User getCurrentUser() {
+        return _authContext.getCurrentUser();
     }
     
     public ResultData<TEntity> getById(int id) {

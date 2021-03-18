@@ -1,7 +1,8 @@
 use jpedidos;
 
-insert into users(name, email, login, password, role) 
-values ('Administrador', 'admin@email.com.br', 'admin', 'uIocuPh+W8WuWp0+qSmlfQ==', 'Admin');
+insert into users(name, email, login, password, role) values 
+('Administrador', 'admin@email.com.br', 'admin', 'uIocuPh+W8WuWp0+qSmlfQ==', 'Admin'),
+('Funcionário', 'funcionario@email.com.br', 'funcionario', 'uIocuPh+W8WuWp0+qSmlfQ==', 'Funcionário');
 
 -- by test
 insert into customers (name, phone) values

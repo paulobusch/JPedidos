@@ -7,6 +7,7 @@ package views;
 
 import controllers.OrdersController;
 import controllers.ProductsController;
+import entities.User;
 import javafx.application.Application;
 
 /**
@@ -30,6 +31,12 @@ public class MainForm extends javax.swing.JFrame {
         
         _ordersController = ordersController;
         _productsController = productsController;
+        updateTitle();
+    }
+    
+    private void updateTitle() {
+        User currentUser = _ordersController.getCurrentUser();
+        setTitle("JPedidos - (" + currentUser.getRoleString() + ")");
     }
 
     /**

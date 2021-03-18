@@ -25,4 +25,22 @@ public class ControllerFunctionalities {
         _controller = controller;
         _functionalities = functionalities;
     }
+
+    public Controller getController() {
+        return _controller;
+    }
+
+    public void setController(Controller _controller) {
+        this._controller = _controller;
+    }
+
+    public List<CrudFunctionality> getFunctionalities() {
+        return _functionalities;
+    }
+
+    public void setFunctionalities(List<CrudFunctionality> _functionalities) {
+        this._functionalities = _functionalities;
+    }
+    
+    
 }
