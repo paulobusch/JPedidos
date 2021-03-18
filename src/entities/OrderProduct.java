@@ -5,6 +5,8 @@
  */
 package entities;
 
+import java.util.regex.Pattern;
+
 /**
  *
  * @author Paulo
@@ -39,6 +41,16 @@ public class OrderProduct extends EntityBase {
 
     public void setAmount(int amount) {
         this.amount = amount;
+    }
+
+    public void setAmount(String amount) {
+        this.amount = Pattern.matches("\\d", amount)
+            ? Integer.parseInt(amount)
+            : 0;
+    }
+
+    public void addAmount(int amount) {
+        this.amount += amount;
     }
 
     public Order getOrder() {

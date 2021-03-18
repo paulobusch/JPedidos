@@ -9,8 +9,11 @@ import controllers.OrdersController;
 import controllers.ProductsController;
 import entities.Customer;
 import entities.Order;
+import entities.OrderProduct;
 import entities.User;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.swing.JOptionPane;
 import models.SelectOption;
 import utils.Result;
@@ -29,6 +32,7 @@ public class OrderForm extends javax.swing.JFrame {
     private OrderProductValidator _orderProductValidator;
     
     private Order _orderCurrent = new Order();
+    private OrderProduct _orderProductCurrent;
     
     public OrderForm(
         OrdersController ordersController
@@ -50,15 +54,35 @@ public class OrderForm extends javax.swing.JFrame {
     private Order getOrder() {
         Order order = _orderCurrent;
         
-        Customer customerSelected = cb_customer.getSelectedItem() != null
-            ? (Customer)cb_customer.getSelectedItem()
-            : null;
-        order.setCustomer(customerSelected);
+        SelectOption customerSelected = cb_customer.getSelectedItem() != null
+            ? (SelectOption)cb_customer.getSelectedItem()
+            : new SelectOption();
+        order.setCustomerId(customerSelected.value);
+        order.setDate(new Date());
         
         return order;
     }
     
     private void setOrder(Order order) {
+        // TODO: implement this method
+    }
+    
+    private OrderProduct getOrderProduct() {
+        OrderProduct orderProduct = _orderProductCurrent == null
+            ? new OrderProduct()
+            : _orderProductCurrent; 
+        
+        orderProduct.setOrderId(_orderCurrent.getId());
+        SelectOption productSelected = cb_product.getSelectedItem() != null
+            ? (SelectOption)cb_product.getSelectedItem()
+            : new SelectOption();
+        orderProduct.setProductId(productSelected.value);
+        orderProduct.setAmount(txt_product_amount.getText());
+        
+        return orderProduct;
+    }
+    
+    private void setOrderProduct(OrderProduct orderProduct) {
         // TODO: implement this method
     }
     
@@ -99,9 +123,9 @@ public class OrderForm extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         pnl_actions1 = new javax.swing.JPanel();
-        btn_clear1 = new javax.swing.JButton();
-        btn_save1 = new javax.swing.JButton();
-        btn_trash1 = new javax.swing.JButton();
+        btn_clear_product = new javax.swing.JButton();
+        btn_save_product = new javax.swing.JButton();
+        btn_trash_product = new javax.swing.JButton();
         lbl_name2 = new javax.swing.JLabel();
         cb_product = new javax.swing.JComboBox();
         lbl_name3 = new javax.swing.JLabel();
@@ -196,11 +220,11 @@ public class OrderForm extends javax.swing.JFrame {
                 {null, null, null, null}
             },
             new String [] {
-                "ID", "Cliente", "Produtos", "Data"
+                "ID", "Cliente", "Preço", "Data"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.Double.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -233,39 +257,39 @@ public class OrderForm extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jTable1);
 
-        btn_clear1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/clean-48.png"))); // NOI18N
-        btn_clear1.setName("btn_clear"); // NOI18N
+        btn_clear_product.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/clean-48.png"))); // NOI18N
+        btn_clear_product.setName("btn_clear"); // NOI18N
 
-        btn_save1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/save-48.png"))); // NOI18N
-        btn_save1.setName("btn_add"); // NOI18N
-        btn_save1.addActionListener(new java.awt.event.ActionListener() {
+        btn_save_product.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/save-48.png"))); // NOI18N
+        btn_save_product.setName("btn_add"); // NOI18N
+        btn_save_product.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_save1ActionPerformed(evt);
+                btn_save_productActionPerformed(evt);
             }
         });
 
-        btn_trash1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/trash-48.png"))); // NOI18N
-        btn_trash1.setName("btn_add"); // NOI18N
+        btn_trash_product.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/trash-48.png"))); // NOI18N
+        btn_trash_product.setName("btn_add"); // NOI18N
 
         javax.swing.GroupLayout pnl_actions1Layout = new javax.swing.GroupLayout(pnl_actions1);
         pnl_actions1.setLayout(pnl_actions1Layout);
         pnl_actions1Layout.setHorizontalGroup(
             pnl_actions1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnl_actions1Layout.createSequentialGroup()
-                .addComponent(btn_clear1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btn_clear_product, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 345, Short.MAX_VALUE)
-                .addComponent(btn_trash1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btn_trash_product, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(btn_save1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(btn_save_product, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         pnl_actions1Layout.setVerticalGroup(
             pnl_actions1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnl_actions1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnl_actions1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btn_trash1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_save1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_clear1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btn_trash_product, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_save_product, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btn_clear_product, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(16, Short.MAX_VALUE))
         );
 
@@ -277,6 +301,7 @@ public class OrderForm extends javax.swing.JFrame {
         lbl_name3.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         lbl_name3.setText("Quantidade:");
 
+        txt_product_amount.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("0"))));
         txt_product_amount.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -352,7 +377,7 @@ public class OrderForm extends javax.swing.JFrame {
 
     private void btn_saveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_saveActionPerformed
         Order order = getOrder();
-        boolean byInsert = _orderCurrent.getId() == 0;
+        boolean byInsert = order.getId() == 0;
         Result result = byInsert
             ? _ordersController.create(order)
             : _ordersController.update(order);
@@ -373,20 +398,42 @@ public class OrderForm extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btn_add_customerActionPerformed
 
-    private void btn_save1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_save1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btn_save1ActionPerformed
+    private void btn_save_productActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_save_productActionPerformed
+        OrderProduct orderProduct = getOrderProduct();
+        boolean byInsert = orderProduct.getId() == 0;
+        Result result = _orderProductValidator.validate(orderProduct);
+        if (result.hasError()){
+            displayResult(result);
+            return;
+        }
 
-    
+        incrementProductIfExist(orderProduct.getProductId(), orderProduct.getAmount());
+                
+        if (byInsert) {
+            _orderCurrent.addOrderProduct(orderProduct);
+            // TODO: insert in table
+        } else {
+            _orderCurrent.updateProduct(orderProduct);
+            // TODO: update in table
+        }
+    }//GEN-LAST:event_btn_save_productActionPerformed
+
+    private void incrementProductIfExist(int productId, int amount) {
+        for (OrderProduct op : _orderCurrent.getOrderProducts()) {
+            if (op.getProductId() == productId) {
+                op.addAmount(amount);
+            }
+        }
+    }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_add_customer;
     private javax.swing.JButton btn_clear;
-    private javax.swing.JButton btn_clear1;
+    private javax.swing.JButton btn_clear_product;
     private javax.swing.JButton btn_save;
-    private javax.swing.JButton btn_save1;
+    private javax.swing.JButton btn_save_product;
     private javax.swing.JButton btn_trash;
-    private javax.swing.JButton btn_trash1;
+    private javax.swing.JButton btn_trash_product;
     private javax.swing.JComboBox cb_customer;
     private javax.swing.JComboBox cb_product;
     private javax.swing.JPanel jPanel1;

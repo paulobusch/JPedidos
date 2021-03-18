@@ -45,11 +45,22 @@ public class DatabaseAdapter {
         }
     }
     
+    public void beginTransaction() {
+        if (!isConnected()) 
+            connect();
+        try {
+            _connection.setAutoCommit(false);
+        } catch (SQLException ex) {
+            throw new JPedidosException("Falha ao iniciar transação", ex);
+        }
+    }
+    
     public boolean commit() {
         if (!isConnected()) 
             connect();
         try {
             _connection.commit();
+            _connection.setAutoCommit(true);
             return true;
         } catch(SQLException ex) {
             throw new JPedidosException("Falha ao commitar alterações no banco de dados", ex);
@@ -61,6 +72,7 @@ public class DatabaseAdapter {
             connect();
         try {
             _connection.rollback();
+            _connection.setAutoCommit(true);
         } catch(SQLException ex) {
             throw new JPedidosException("Falha ao fazer rollback das alterações no banco de dados", ex);
         }

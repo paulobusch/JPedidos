@@ -8,6 +8,7 @@ package entities;
 import static enums.CrudFunctionality.List;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -17,7 +18,9 @@ import java.util.List;
 public class Order extends EntityBase {
     private int customerId;
     private int userId;
+    private Date date;
     
+    private double total;
     private Customer customer;
     private ArrayList<OrderProduct> orderProducts;
     private User user;
@@ -58,6 +61,22 @@ public class Order extends EntityBase {
     public void setUser(User user) {
         this.userId = user == null ? 0 : user.getId();
         this.user = user;
+    }
+
+    public double getTotal() {
+        return total;
+    }
+
+    public void setTotal(double total) {
+        this.total = total;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
     
     public List<OrderProduct> getOrderProducts() {
