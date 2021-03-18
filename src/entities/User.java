@@ -28,13 +28,17 @@ public class User extends EntityBase {
         return this.password.equals(hash);
     }
 
-    public void setPassword(String password) {
+    public void setRawPassword(String password) {
         if (password == null || password.equals("")) {
             this.password = null;
             return;
         }
         
         this.password = AESHash.encrypt(password, Settings.SecretKey);
+    }
+    
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getPassword() {

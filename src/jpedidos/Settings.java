@@ -45,5 +45,12 @@ public class Settings {
         DbUser = settings.getProperty("USER");
         DbPass = settings.getProperty("PASS");
         DbDriver = settings.getProperty("DRIVER");
+        
+        try {
+            String base64Key = settings.getProperty("SECRET");
+            SecretKey = AESKey.decodeBase64ToAESKey(base64Key);   
+        } catch (Exception ex) {
+            throw new JPedidosException("Falha ao decodificar chave privada", ex);
+        }
     }
 }
