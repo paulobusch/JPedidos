@@ -17,6 +17,7 @@ import repositories.IOrderRepository;
 import repositories.IProductRepository;
 import repositories.IRepository;
 import utils.Result;
+import utils.ResultData;
 import validators.IValidator;
 import validators.OrderValidator;
 
@@ -69,6 +70,10 @@ public class OrdersController extends ControllerBase<Order> {
         }
         
         return super.update(order);
+    }
+    
+    public double getTotalPrice(int id) {
+        return _orderRepository.getTotalPrice(id);
     }
     
     public ArrayList<SelectOption> getCustomersFlat() {

@@ -12,5 +12,5 @@ import entities.Order;
  * @author Paulo
  */
 public interface IOrderRepository extends IRepository<Order> {
-    
+    double getTotalPrice(int id);
 }

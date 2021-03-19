@@ -172,7 +172,7 @@ public class OrderForm extends javax.swing.JFrame {
     }
     
     private ArrayList<Object> getOrderColumnsData(Order order) {
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         ArrayList<Object> columns = new ArrayList<>();
         columns.add(order.getId());
         columns.add(getCustomerSelected(order.getCustomerId()).text);
@@ -624,6 +624,7 @@ public class OrderForm extends javax.swing.JFrame {
             return;
         }
         
+        order.setTotal(_ordersController.getTotalPrice(order.getId()));
         if (byInsert) {
             addRowOrderTable(order);
         } else {

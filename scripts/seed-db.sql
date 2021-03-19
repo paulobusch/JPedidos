@@ -11,5 +11,5 @@ insert into customers (name, phone) values
 
 insert into products (name, description, price) values
 ('Teclado', 'Teclado DELL', 50),
-('Notebook', 'Notebook Core I7 16GB de Ram', 50),
+('Notebook', 'Notebook Core I7 16GB de Ram', 6000),
 ('Caixa de som', 'Caixa de som da JBL', 2600);

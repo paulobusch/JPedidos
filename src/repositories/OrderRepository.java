@@ -15,6 +15,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import utils.JPedidosException;
@@ -29,6 +31,29 @@ public class OrderRepository implements IOrderRepository {
     
     public OrderRepository(DatabaseAdapter adapter) {
         _adapter = adapter;
+    }
+
+    @Override
+    public double getTotalPrice(int id) {
+        String sql = "select sum(p.price * op.amount) as total_price from orders o\n" +
+            "join orders_products op on op.order_id=o.id\n" +
+            "join products p on p.id=op.product_id\n" +
+            "where o.id=?"; 
+        Connection connection = _adapter.getConnection();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql,
+                ResultSet.TYPE_SCROLL_SENSITIVE,
+                ResultSet.CONCUR_READ_ONLY
+            );
+            
+            preparedStatement.setInt(1, id);
+            
+            ResultSet result = preparedStatement.executeQuery();
+            result.next();
+            return result.getDouble("total_price");
+        } catch(SQLException ex) {
+            throw new JPedidosException("Falha na execução da consulta do preço total do pedido", ex);
+        }
     }
 
     @Override
@@ -71,10 +96,11 @@ public class OrderRepository implements IOrderRepository {
 
     @Override
     public ArrayList<Order> getAll() {
-        String sql = "select o.id, o.customer_id, c.name as customer_name, sum(p.price) as total_price, o.date from orders o\n" +
+        String sql = "select o.id, o.customer_id, c.name as customer_name, sum(p.price * op.amount) as total_price, o.date from orders o\n" +
             "join customers c on c.id=o.customer_id\n" +
             "join orders_products op on op.order_id=o.id\n" +
-            "join products p on p.id=op.product_id"; 
+            "join products p on p.id=op.product_id\n" +
+            "group by o.id"; 
         Connection connection = _adapter.getConnection();
         try {
             Statement statement = connection.createStatement(
@@ -89,7 +115,7 @@ public class OrderRepository implements IOrderRepository {
             
             return orders;
         } catch(SQLException ex) {
-            throw new JPedidosException("Falha na execução da consulta de usuário pelo id", ex);
+            throw new JPedidosException("Falha na execução da consulta dos pedidos", ex);
         }
     }
 
@@ -182,12 +208,20 @@ public class OrderRepository implements IOrderRepository {
     @Override
     public void delete(Order order) {
         String sqlDelete = "delete from orders where id=?;";
-        String sqlOrderProductsDelete = "delete orders_products where order_id=?;";
+        String sqlOrderProductsDelete = "delete from orders_products where order_id=?;";
         Connection connection = _adapter.getConnection();
         try {
             _adapter.beginTransaction();
             
-            PreparedStatement preparedStatement = connection.prepareStatement(sqlDelete,
+            PreparedStatement preparedStatement = connection.prepareStatement(sqlOrderProductsDelete,
+                ResultSet.TYPE_SCROLL_SENSITIVE,
+                ResultSet.CONCUR_UPDATABLE
+            );
+            
+            preparedStatement.setInt(1, order.getId());
+            preparedStatement.executeUpdate();
+            
+            preparedStatement = connection.prepareStatement(sqlDelete,
                 ResultSet.TYPE_SCROLL_SENSITIVE,
                 ResultSet.CONCUR_UPDATABLE
             );
@@ -195,14 +229,6 @@ public class OrderRepository implements IOrderRepository {
             preparedStatement.setInt(1, order.getId());
             int rows = preparedStatement.executeUpdate();
             if (rows == 0) throw new JPedidosException("Nenhum pedido foi removido");
-            
-            preparedStatement = connection.prepareStatement(sqlOrderProductsDelete,
-                ResultSet.TYPE_SCROLL_SENSITIVE,
-                ResultSet.CONCUR_UPDATABLE
-            );
-            
-            preparedStatement.setInt(1, order.getId());
-            preparedStatement.executeUpdate();
             
             _adapter.commit();
         } catch(SQLException ex) {
@@ -346,6 +372,7 @@ public class OrderRepository implements IOrderRepository {
     
     private Order mapOrderList(ResultSet cursor) {
         try {
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Customer customer = new Customer();
             customer.setId(cursor.getInt("customer_id"));
             customer.setName(cursor.getString("customer_name"));
@@ -354,7 +381,13 @@ public class OrderRepository implements IOrderRepository {
             order.setId(cursor.getInt("id"));
             order.setCustomer(customer);
             order.setTotal(cursor.getDouble("total_price"));
-            order.setDate(cursor.getDate("date"));
+            
+            try {
+                order.setDate(df.parse(cursor.getString("date")));
+            } catch (ParseException ex) {
+                throw new JPedidosException("Falha ao converter data do pedido", ex);
+            } 
+            
             return order;
         } catch(SQLException ex) {
             throw new JPedidosException("Falha ao mapear Order list", ex);
@@ -379,9 +412,10 @@ public class OrderRepository implements IOrderRepository {
     
     private void mapCreateOrderParams(PreparedStatement preparedStatement, Order order) {
         try {
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             preparedStatement.setInt(1, order.getUserId());
             preparedStatement.setInt(2, order.getCustomerId());
-            preparedStatement.setDate(3, new java.sql.Date(order.getDate().getTime()));
+            preparedStatement.setString(3, df.format(order.getDate()));
         } catch(SQLException ex) {
             throw new JPedidosException("Falha ao mapear Params", ex);
         }
