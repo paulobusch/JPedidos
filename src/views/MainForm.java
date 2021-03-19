@@ -5,9 +5,12 @@
  */
 package views;
 
+import context.IAuthContext;
 import controllers.OrdersController;
 import controllers.ProductsController;
 import entities.User;
+import enums.Controller;
+import enums.CrudFunctionality;
 import javafx.application.Application;
 import validators.OrderProductValidator;
 
@@ -21,20 +24,32 @@ public class MainForm extends javax.swing.JFrame {
      * Creates new form JPedidosForm
      */
     
+    private IAuthContext _authContext;
     private OrdersController _ordersController;
     
     public MainForm(
+        IAuthContext authContext,
         OrdersController ordersController
     ) {
         initComponents();
         
+        _authContext = authContext;
         _ordersController = ordersController;
         updateTitle();
+        toggleMenus();
     }
     
     private void updateTitle() {
         User currentUser = _ordersController.getCurrentUser();
         setTitle("JPedidos - (" + currentUser.getRoleString() + ")");
+    }
+    
+    private void toggleMenus() {
+        mi_users.setVisible(_authContext.hasPermission(Controller.Users, CrudFunctionality.Create));
+        mi_products.setVisible(_authContext.hasPermission(Controller.Products, CrudFunctionality.Create));
+        mi_customers.setVisible(_authContext.hasPermission(Controller.Customers, CrudFunctionality.Create));
+        mi_orders.setVisible(_authContext.hasPermission(Controller.Orders, CrudFunctionality.List));
+        mi_new_order.setVisible(_authContext.hasPermission(Controller.Orders, CrudFunctionality.Create));
     }
 
     /**
@@ -48,16 +63,22 @@ public class MainForm extends javax.swing.JFrame {
 
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
+        mi_users = new javax.swing.JMenuItem();
         mi_products = new javax.swing.JMenuItem();
         mi_customers = new javax.swing.JMenuItem();
         mi_orders = new javax.swing.JMenuItem();
+        mi_new_order = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         mi_exit = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jMenu1.setText("Cadastros");
+        jMenu1.setText("Arquivo");
         jMenu1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+
+        mi_users.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        mi_users.setText("Usuários");
+        jMenu1.add(mi_users);
 
         mi_products.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         mi_products.setText("Produtos");
@@ -75,6 +96,15 @@ public class MainForm extends javax.swing.JFrame {
             }
         });
         jMenu1.add(mi_orders);
+
+        mi_new_order.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        mi_new_order.setText("Lançar Pedido");
+        mi_new_order.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mi_new_orderActionPerformed(evt);
+            }
+        });
+        jMenu1.add(mi_new_order);
 
         jMenuBar1.add(jMenu1);
 
@@ -110,12 +140,16 @@ public class MainForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void mi_ordersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mi_ordersActionPerformed
-        new OrderForm(_ordersController).setVisible(true);
+        
     }//GEN-LAST:event_mi_ordersActionPerformed
 
     private void mi_exitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mi_exitActionPerformed
         System.exit(0);
     }//GEN-LAST:event_mi_exitActionPerformed
+
+    private void mi_new_orderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mi_new_orderActionPerformed
+        new OrderForm(_ordersController).setVisible(true);
+    }//GEN-LAST:event_mi_new_orderActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu jMenu1;
@@ -123,7 +157,9 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem mi_customers;
     private javax.swing.JMenuItem mi_exit;
+    private javax.swing.JMenuItem mi_new_order;
     private javax.swing.JMenuItem mi_orders;
     private javax.swing.JMenuItem mi_products;
+    private javax.swing.JMenuItem mi_users;
     // End of variables declaration//GEN-END:variables
 }

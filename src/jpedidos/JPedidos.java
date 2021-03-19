@@ -76,11 +76,18 @@ public class JPedidos {
         
         
         try {
-            //new LoginForm(usersController).setVisible(true);
+            new LoginForm(
+                context,
+                usersController, 
+                ordersController, 
+                productsController
+            ).setVisible(true);
             
             // by pass
+            /*
             User user = userRepository.getByLogin("admin");
             context.setCurrentUser(user);
+            */
             
             new OrderForm(ordersController).setVisible(true);
         } catch (JPedidosException e) {

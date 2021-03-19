@@ -10,6 +10,8 @@ import enums.Controller;
 import enums.CrudFunctionality;
 import enums.Role;
 import java.util.ArrayList;
+import java.util.List;
+import permissions.ControllerFunctionalities;
 
 /**
  *
@@ -17,7 +19,9 @@ import java.util.ArrayList;
  */
 public interface IAuthContext {
     boolean isAuthenticated();
-    boolean hasPermission(Controller controller, CrudFunctionality functionality);    
+    boolean hasPermission(Controller controller, CrudFunctionality functionality);
+    boolean anyPermission(Controller controller, List<CrudFunctionality> functionalities);
+    boolean anyPermission(List<ControllerFunctionalities> controllerFunctionalities);    
     User getCurrentUser();    
     void setCurrentUser(User user);
 }

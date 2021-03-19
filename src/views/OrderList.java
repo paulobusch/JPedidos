@@ -28,7 +28,7 @@ import validators.OrderProductValidator;
  *
  * @author Paulo
  */
-public class OrderForm extends javax.swing.JFrame {
+public class OrderList extends javax.swing.JFrame {
 
     /**
      * Creates new form OrderForm
@@ -42,9 +42,10 @@ public class OrderForm extends javax.swing.JFrame {
     private List<SelectOption> _customers;
     private List<SelectOption> _products;
     
+    private DefaultTableModel _orderTableModel;
     private DefaultTableModel _orderProductTableModel;
     
-    public OrderForm(
+    public OrderList(
         OrdersController ordersController
     ) {
         initComponents();
@@ -54,6 +55,7 @@ public class OrderForm extends javax.swing.JFrame {
         
         loadSelectFields();
         updateTitle();
+        
     }
     
     private void updateTitle() {
@@ -153,6 +155,10 @@ public class OrderForm extends javax.swing.JFrame {
         return Integer.parseInt(raw.toString());
     }
     
+    private void clearOrderTable() {
+        _orderTableModel.setRowCount(0);
+    }
+    
     private void clearOrderProductTable() {
         _orderProductTableModel.setRowCount(0);
     }
@@ -165,17 +171,41 @@ public class OrderForm extends javax.swing.JFrame {
         }
     }
     
+    private ArrayList<Object> getOrderColumnsData(Order order) {
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        ArrayList<Object> columns = new ArrayList<>();
+        columns.add(order.getId());
+        columns.add(getCustomerSelected(order.getCustomerId()).text);
+        columns.add(order.getTotal());
+        columns.add(df.format(order.getDate()));
+        return columns;
+    }
+    
     private ArrayList<Object> getOrderProductColumnsData(OrderProduct orderProduct) {
         ArrayList<Object> columns = new ArrayList<>();
-        columns.add(String.valueOf(orderProduct.getId()));
+        columns.add(orderProduct.getId());
         columns.add(getProductSelected(orderProduct.getProductId()).text);
-        columns.add(String.valueOf(orderProduct.getAmount()));
+        columns.add(orderProduct.getAmount());
         return columns;
+    }
+    
+    private void addRowOrderTable(Order order) {
+        ArrayList<Object> columnsData = getOrderColumnsData(order);
+        _orderTableModel.addRow(columnsData.toArray());
     }
     
     private void addRowOrderProductTable(OrderProduct orderProduct) {
         ArrayList<Object> columnsData = getOrderProductColumnsData(orderProduct);
         _orderProductTableModel.addRow(columnsData.toArray());
+    }
+    
+    private void editRowOrderTable(Order order) {
+        ArrayList<Object> columnsData = getOrderColumnsData(order);
+        int row = getRowIndexWithId(_orderTableModel, order.getId());
+        for (Object data : columnsData){
+            int col = columnsData.indexOf(data);
+            _orderTableModel.setValueAt(data, row, col);
+        }
     }
     
     private void editRowOrderProductTable(OrderProduct orderProduct) {
@@ -185,6 +215,11 @@ public class OrderForm extends javax.swing.JFrame {
             int col = columnsData.indexOf(data);
             _orderProductTableModel.setValueAt(data, row, col);
         }
+    }
+    
+    private void removeRowOrderTable(Order order) {
+        int index = getRowIndexWithId(_orderTableModel, order.getId());
+        _orderTableModel.removeRow(index);
     }
     
     private void removeRowOrderProductTable(OrderProduct orderProduct) {
@@ -199,6 +234,28 @@ public class OrderForm extends javax.swing.JFrame {
             if (rowId == id) return row;
         }
         return -1;
+    }
+    
+    private void orderTableEvents() {
+        ListSelectionModel model = tbl_list_orders.getSelectionModel();
+        model.addListSelectionListener(new ListSelectionListener(){
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                int row = tbl_list_orders.getSelectedRow();
+                if (row == -1) {
+                    setOrder(new Order());
+                    return;
+                }
+                int id = getTableIdByIndex(_orderTableModel, row);
+                ResultData<Order> result = _ordersController.getById(id);
+                if (result.hasError()){
+                    displayResult(Result.error(result.getErrorMessage()));
+                    return;
+                }
+                btn_trash.setEnabled(true);
+                setOrder(result.getData());
+            }
+        });
     }
         
     private void orderProductTableEvents() {
@@ -224,6 +281,8 @@ public class OrderForm extends javax.swing.JFrame {
     }
     
     private void clearOrderSelection() {
+        btn_trash.setEnabled(false);
+        tbl_list_orders.clearSelection();
         setOrder(new Order());  
         clearOrderProductSelection();
     }
@@ -263,6 +322,9 @@ public class OrderForm extends javax.swing.JFrame {
         pnl_actions = new javax.swing.JPanel();
         btn_clear = new javax.swing.JButton();
         btn_save = new javax.swing.JButton();
+        btn_trash = new javax.swing.JButton();
+        list_scroll = new javax.swing.JScrollPane();
+        tbl_list_orders = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbl_list_order_products = new javax.swing.JTable();
@@ -339,6 +401,15 @@ public class OrderForm extends javax.swing.JFrame {
             }
         });
 
+        btn_trash.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/trash-48.png"))); // NOI18N
+        btn_trash.setEnabled(false);
+        btn_trash.setName("btn_add"); // NOI18N
+        btn_trash.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_trashActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnl_actionsLayout = new javax.swing.GroupLayout(pnl_actions);
         pnl_actions.setLayout(pnl_actionsLayout);
         pnl_actionsLayout.setHorizontalGroup(
@@ -347,6 +418,8 @@ public class OrderForm extends javax.swing.JFrame {
                 .addGap(32, 32, 32)
                 .addComponent(btn_clear, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btn_trash, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(btn_save, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(27, 27, 27))
         );
@@ -355,10 +428,36 @@ public class OrderForm extends javax.swing.JFrame {
             .addGroup(pnl_actionsLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnl_actionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btn_trash, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_save, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_clear, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        tbl_list_orders.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "ID", "Cliente", "Preço", "Data"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.String.class, java.lang.Double.class, java.lang.String.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        tbl_list_orders.setName("tbl_list_orders"); // NOI18N
+        list_scroll.setViewportView(tbl_list_orders);
+        if (tbl_list_orders.getColumnModel().getColumnCount() > 0) {
+            tbl_list_orders.getColumnModel().getColumn(0).setPreferredWidth(1);
+        }
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Produtos"));
 
@@ -489,7 +588,9 @@ public class OrderForm extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(pnl_fields, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(pnl_actions, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(list_scroll)
+                            .addComponent(pnl_actions, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addContainerGap())))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -505,7 +606,9 @@ public class OrderForm extends javax.swing.JFrame {
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(pnl_actions, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(list_scroll, javax.swing.GroupLayout.DEFAULT_SIZE, 265, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -524,14 +627,12 @@ public class OrderForm extends javax.swing.JFrame {
             return;
         }
         
-        double total = _ordersController.getTotalPrice(order.getId());
-        JOptionPane.showMessageDialog(
-            this, 
-            "Pedido registrador com sucesso!\nValor do pedido: " + 
-                String.format("%.2f", total).replace('.', ','), 
-            "Informação", 
-            JOptionPane.INFORMATION_MESSAGE
-        );
+        order.setTotal(_ordersController.getTotalPrice(order.getId()));
+        if (byInsert) {
+            addRowOrderTable(order);
+        } else {
+            editRowOrderTable(order);
+        }
         clearOrderSelection();
     }//GEN-LAST:event_btn_saveActionPerformed
 
@@ -571,11 +672,26 @@ public class OrderForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_save_productActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        _orderTableModel = (DefaultTableModel)tbl_list_orders.getModel();                       
         _orderProductTableModel = (DefaultTableModel)tbl_list_order_products.getModel();
         
+        orderTableEvents();
         orderProductTableEvents();
+        
+        clearOrderTable();
         clearOrderProductTable();
+        
         clearOrderSelection();
+        
+        ResultData<ArrayList<Order>> result = _ordersController.getAll();
+        if (result.hasError()){
+            displayResult(Result.error(result.getErrorMessage()));
+            return;
+        }
+        
+        for (Order order : result.getData()) {
+            addRowOrderTable(order);
+        }
     }//GEN-LAST:event_formWindowOpened
 
     private void btn_clearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_clearActionPerformed
@@ -585,6 +701,20 @@ public class OrderForm extends javax.swing.JFrame {
     private void btn_clear_productActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_clear_productActionPerformed
         clearOrderProductSelection();
     }//GEN-LAST:event_btn_clear_productActionPerformed
+
+    private void btn_trashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_trashActionPerformed
+        int option = JOptionPane.showConfirmDialog(this, "Deseja excluir o pedido?", "Excluir", JOptionPane.OK_CANCEL_OPTION);
+        if(option != JOptionPane.OK_OPTION) return;
+        Order order = getOrder();
+        Result result = _ordersController.delete(order.getId());
+        if (result.hasError()) {
+            displayResult(result);
+            return;        
+        }
+        
+        removeRowOrderTable(order);
+        clearOrderSelection();
+    }//GEN-LAST:event_btn_trashActionPerformed
 
     private void btn_trash_productActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_trash_productActionPerformed
         int option = JOptionPane.showConfirmDialog(this, "Deseja excluir o produto do pedido?", "Excluir", JOptionPane.OK_CANCEL_OPTION);
@@ -604,6 +734,7 @@ public class OrderForm extends javax.swing.JFrame {
     private javax.swing.JButton btn_clear_product;
     private javax.swing.JButton btn_save;
     private javax.swing.JButton btn_save_product;
+    private javax.swing.JButton btn_trash;
     private javax.swing.JButton btn_trash_product;
     private javax.swing.JComboBox cb_customer;
     private javax.swing.JComboBox cb_product;
@@ -612,10 +743,12 @@ public class OrderForm extends javax.swing.JFrame {
     private javax.swing.JLabel lbl_name;
     private javax.swing.JLabel lbl_name2;
     private javax.swing.JLabel lbl_name3;
+    private javax.swing.JScrollPane list_scroll;
     private javax.swing.JPanel pnl_actions;
     private javax.swing.JPanel pnl_actions1;
     private javax.swing.JPanel pnl_fields;
     private javax.swing.JTable tbl_list_order_products;
+    private javax.swing.JTable tbl_list_orders;
     private javax.swing.JFormattedTextField txt_product_amount;
     // End of variables declaration//GEN-END:variables
 }

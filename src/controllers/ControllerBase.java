@@ -43,7 +43,7 @@ public class ControllerBase<TEntity extends EntityBase> {
     }
     
     public ResultData<TEntity> getById(int id) {
-        if (_authContext.hasPermission(_controller, CrudFunctionality.Read))
+        if (!_authContext.hasPermission(_controller, CrudFunctionality.Read))
             return ResultData.error("O Usuário não tem permissão para ler registro.");
         
         TEntity entity = _repository.getById(id);
@@ -51,7 +51,7 @@ public class ControllerBase<TEntity extends EntityBase> {
     }
     
     public ResultData<ArrayList<TEntity>> getAll() {
-        if (_authContext.hasPermission(_controller, CrudFunctionality.List))
+        if (!_authContext.hasPermission(_controller, CrudFunctionality.List))
             return ResultData.error("O Usuário não tem permissão para listar os registros.");
         
         ArrayList<TEntity> list = _repository.getAll();
@@ -59,7 +59,7 @@ public class ControllerBase<TEntity extends EntityBase> {
     }
     
     public Result create(TEntity entity) {
-        if (_authContext.hasPermission(_controller, CrudFunctionality.Create))
+        if (!_authContext.hasPermission(_controller, CrudFunctionality.Create))
             return Result.error("O Usuário não tem permissão para criar um novo registro");
         
         Result validationResult = _validator.validate(entity);
@@ -71,7 +71,7 @@ public class ControllerBase<TEntity extends EntityBase> {
     }
     
     public Result update(TEntity entity) {
-        if (_authContext.hasPermission(_controller, CrudFunctionality.Update))
+        if (!_authContext.hasPermission(_controller, CrudFunctionality.Update))
             return Result.error("O Usuário não tem permissão para atualizar o registro");
         
         Result validationResult = _validator.validate(entity);
@@ -83,7 +83,7 @@ public class ControllerBase<TEntity extends EntityBase> {
     }
     
     public Result delete(int id) {
-        if (_authContext.hasPermission(_controller, CrudFunctionality.Delete))
+        if (!_authContext.hasPermission(_controller, CrudFunctionality.Delete))
             return Result.error("O Usuário não tem permissão para remover o registro");
         
         TEntity entity = _repository.getById(id);

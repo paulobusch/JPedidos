@@ -5,6 +5,7 @@
  */
 package views;
 
+import context.IAuthContext;
 import controllers.OrdersController;
 import controllers.ProductsController;
 import controllers.UsersController;
@@ -21,16 +22,19 @@ public class LoginForm extends javax.swing.JFrame {
     /**
      * Creates new form LoginFrame
      */
+    private IAuthContext _authContext;
     private UsersController _usersController;
     private OrdersController _ordersController;
     private ProductsController _productsController;
     
     public LoginForm(
+        IAuthContext authContext,
         UsersController usersController,
         OrdersController ordersController,
         ProductsController productsController
     ) {
         initComponents();
+        _authContext = authContext;
         _usersController = usersController;
         _ordersController = ordersController;
         _productsController = productsController;
@@ -147,7 +151,7 @@ public class LoginForm extends javax.swing.JFrame {
             return;
         }
         
-        new MainForm(_ordersController).setVisible(true);
+        new MainForm(_authContext, _ordersController).setVisible(true);
         
         this.dispose();
     }//GEN-LAST:event_btn_loginActionPerformed

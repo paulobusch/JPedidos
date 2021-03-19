@@ -12,5 +12,6 @@ package enums;
 public enum Controller {
     Users,
     Orders,
-    Products
+    Products,    
+    Customers
 }
