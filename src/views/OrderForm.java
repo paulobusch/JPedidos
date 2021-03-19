@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -118,7 +119,7 @@ public class OrderForm extends javax.swing.JFrame {
         _orderProductCurrent = orderProduct;
         
         cb_product.getModel().setSelectedItem(getProductSelected(orderProduct.getProductId()));
-        
+        txt_product_amount.setText(String.valueOf(orderProduct.getAmount()));
     }
     
     private void loadSelectFields() {        
@@ -138,12 +139,15 @@ public class OrderForm extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, result.getErrorMessage(), "Informação", JOptionPane.INFORMATION_MESSAGE);
     }
     
-    private void incrementProductIfExist(int productId, int amount) {
+    private OrderProduct incrementProductIfExist(int id, int productId, int amount) {
         for (OrderProduct op : _orderCurrent.getOrderProducts()) {
+            if (op.getId() == id) continue;
             if (op.getProductId() == productId) {
                 op.addAmount(amount);
+                return op;
             }
         }
+        return null;
     }
     
     private int getTableIdByIndex(DefaultTableModel model, int index) {
@@ -159,11 +163,19 @@ public class OrderForm extends javax.swing.JFrame {
         _orderProductTableModel.setRowCount(0);
     }
     
+    private void removeCellEditor(JTable table) {
+        for (int c = 0; c < table.getColumnCount(); c++)
+        {
+            Class<?> col_class = table.getColumnClass(c);
+            table.setDefaultEditor(col_class, null);
+        }
+    }
+    
     private ArrayList<Object> getOrderColumnsData(Order order) {
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
         ArrayList<Object> columns = new ArrayList<>();
         columns.add(order.getId());
-        columns.add(order.getCustomer().getName());
+        columns.add(getCustomerSelected(order.getCustomerId()).text);
         columns.add(order.getTotal());
         columns.add(df.format(order.getDate()));
         return columns;
@@ -172,7 +184,7 @@ public class OrderForm extends javax.swing.JFrame {
     private ArrayList<Object> getOrderProductColumnsData(OrderProduct orderProduct) {
         ArrayList<Object> columns = new ArrayList<>();
         columns.add(orderProduct.getId());
-        columns.add(orderProduct.getProduct().getName());
+        columns.add(getProductSelected(orderProduct.getProductId()).text);
         columns.add(orderProduct.getAmount());
         return columns;
     }
@@ -188,27 +200,41 @@ public class OrderForm extends javax.swing.JFrame {
     }
     
     private void editRowOrderTable(Order order) {
-        // TODO: implement this method
+        ArrayList<Object> columnsData = getOrderColumnsData(order);
+        int row = getRowIndexWithId(_orderTableModel, order.getId());
+        for (Object data : columnsData){
+            int col = columnsData.indexOf(data);
+            _orderTableModel.setValueAt(data, row, col);
+        }
     }
     
     private void editRowOrderProductTable(OrderProduct orderProduct) {
-        // TODO: implement this method
+        ArrayList<Object> columnsData = getOrderProductColumnsData(orderProduct);
+        int row = getRowIndexWithId(_orderProductTableModel, orderProduct.getId());
+        for (Object data : columnsData){
+            int col = columnsData.indexOf(data);
+            _orderProductTableModel.setValueAt(data, row, col);
+        }
     }
     
     private void removeRowOrderTable(Order order) {
-        int row = tbl_list_orders.getSelectedRow();
-        int id = getTableIdByIndex(_orderTableModel, row);
-        if (order.getId() == id)
-            _orderTableModel.removeRow(row);
+        int index = getRowIndexWithId(_orderTableModel, order.getId());
+        _orderTableModel.removeRow(index);
     }
     
     private void removeRowOrderProductTable(OrderProduct orderProduct) {
-        int row = tbl_list_order_products.getSelectedRow();
-        int id = getTableIdByIndex(_orderProductTableModel, row);
-        if (orderProduct.getId() == id)
-            _orderProductTableModel.removeRow(row);
+        int index = getRowIndexWithId(_orderProductTableModel, orderProduct.getId());
+        _orderProductTableModel.removeRow(index);
     }
     
+    private int getRowIndexWithId(DefaultTableModel model, int id) {
+        for (int row = 0; row < model.getRowCount(); row++){
+            Object raw = model.getValueAt(row, 0);
+            int rowId = Integer.parseInt(raw.toString());
+            if (rowId == id) return row;
+        }
+        return -1;
+    }
     
     private void orderTableEvents() {
         ListSelectionModel model = tbl_list_orders.getSelectionModel();
@@ -226,6 +252,7 @@ public class OrderForm extends javax.swing.JFrame {
                     displayResult(Result.error(result.getErrorMessage()));
                     return;
                 }
+                btn_trash.setEnabled(true);
                 setOrder(result.getData());
             }
         });
@@ -244,6 +271,7 @@ public class OrderForm extends javax.swing.JFrame {
                 int id = getTableIdByIndex(_orderProductTableModel, row);
                 for (OrderProduct orderProduct : _orderCurrent.getOrderProducts()) {
                     if (orderProduct.getId() == id) {
+                        btn_trash_product.setEnabled(true);
                         setOrderProduct(orderProduct);
                         return;
                     }
@@ -253,13 +281,29 @@ public class OrderForm extends javax.swing.JFrame {
     }
     
     private void clearOrderSelection() {
+        btn_trash.setEnabled(false);
         tbl_list_orders.clearSelection();
         setOrder(new Order());  
+        clearOrderProductSelection();
     }
     
     private void clearOrderProductSelection() {
+        btn_trash_product.setEnabled(false);
         tbl_list_order_products.clearSelection();
         setOrderProduct(new OrderProduct());  
+    }
+    
+    private DefaultTableModel newTableModel(JTable table) {
+        DefaultTableModel tableModel = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+               return false;
+            }
+        };
+
+        table.setModel(tableModel);
+        
+        return tableModel;
     }
 
     /**
@@ -355,6 +399,7 @@ public class OrderForm extends javax.swing.JFrame {
         });
 
         btn_trash.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/trash-48.png"))); // NOI18N
+        btn_trash.setEnabled(false);
         btn_trash.setName("btn_add"); // NOI18N
         btn_trash.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -446,6 +491,7 @@ public class OrderForm extends javax.swing.JFrame {
         });
 
         btn_trash_product.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/trash-48.png"))); // NOI18N
+        btn_trash_product.setEnabled(false);
         btn_trash_product.setName("btn_add"); // NOI18N
         btn_trash_product.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -491,7 +537,7 @@ public class OrderForm extends javax.swing.JFrame {
         lbl_name3.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         lbl_name3.setText("Quantidade:");
 
-        txt_product_amount.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("0"))));
+        txt_product_amount.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat(""))));
         txt_product_amount.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -583,6 +629,7 @@ public class OrderForm extends javax.swing.JFrame {
         } else {
             editRowOrderTable(order);
         }
+        clearOrderSelection();
     }//GEN-LAST:event_btn_saveActionPerformed
 
     private void btn_add_customerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_add_customerActionPerformed
@@ -598,20 +645,32 @@ public class OrderForm extends javax.swing.JFrame {
             return;
         }
 
-        incrementProductIfExist(orderProduct.getProductId(), orderProduct.getAmount());
-                
+        OrderProduct orderProductPersist = orderProduct;
+        OrderProduct orderProductUpdated = incrementProductIfExist(orderProduct.getId(), orderProduct.getProductId(), orderProduct.getAmount());
+        if (orderProductUpdated != null) {
+            byInsert = false;
+            orderProductPersist = orderProductUpdated;
+        }     
+        
         if (byInsert) {
-            _orderCurrent.addOrderProduct(orderProduct);
-            // TODO: insert in table
+            _orderCurrent.addOrderProduct(orderProductPersist);
+            addRowOrderProductTable(orderProductPersist);
         } else {
-            _orderCurrent.updateProduct(orderProduct);
-            // TODO: update in table
+            _orderCurrent.updateProduct(orderProductPersist);
+            editRowOrderProductTable(orderProductPersist);
+            if (orderProductUpdated != null && orderProduct.getId() != 0) {
+                Order order = getOrder();
+                order.removeProduct(orderProduct);
+                removeRowOrderProductTable(orderProduct);
+            }
         }
+        clearOrderProductSelection();
     }//GEN-LAST:event_btn_save_productActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         _orderTableModel = (DefaultTableModel)tbl_list_orders.getModel();                       
         _orderProductTableModel = (DefaultTableModel)tbl_list_order_products.getModel();
+        
         orderTableEvents();
         orderProductTableEvents();
         
@@ -619,7 +678,6 @@ public class OrderForm extends javax.swing.JFrame {
         clearOrderProductTable();
         
         clearOrderSelection();
-        clearOrderProductSelection();
         
         ResultData<ArrayList<Order>> result = _ordersController.getAll();
         if (result.hasError()){
@@ -651,7 +709,7 @@ public class OrderForm extends javax.swing.JFrame {
         }
         
         removeRowOrderTable(order);
-        setOrder(new Order());
+        clearOrderSelection();
     }//GEN-LAST:event_btn_trashActionPerformed
 
     private void btn_trash_productActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_trash_productActionPerformed
@@ -662,7 +720,7 @@ public class OrderForm extends javax.swing.JFrame {
         order.removeProduct(orderProduct);
         
         removeRowOrderProductTable(orderProduct);
-        setOrderProduct(new OrderProduct());
+        clearOrderProductSelection();
     }//GEN-LAST:event_btn_trash_productActionPerformed
 
     

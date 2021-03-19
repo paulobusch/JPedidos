@@ -84,13 +84,16 @@ public class Order extends EntityBase {
     }
 
     public void addOrderProduct(OrderProduct orderProduct) {
-        int maxId = orderProduct.getId();
-        for (OrderProduct op : orderProducts) {
-            if (op.getId() > maxId) 
-                maxId = op.getId();
+        if (orderProduct.getId() == 0) {
+            int maxId = orderProduct.getId();
+            for (OrderProduct op : orderProducts) {
+                if (op.getId() > maxId) 
+                    maxId = op.getId();
+            }
+
+            orderProduct.setId(maxId + 1);
         }
         
-        orderProduct.setId(maxId + 1);
         orderProducts.add(orderProduct);
     }
 

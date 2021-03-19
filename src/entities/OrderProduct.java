@@ -44,7 +44,7 @@ public class OrderProduct extends EntityBase {
     }
 
     public void setAmount(String amount) {
-        this.amount = Pattern.matches("\\d", amount)
+        this.amount = Pattern.matches("\\d+", amount)
             ? Integer.parseInt(amount)
             : 0;
     }
@@ -70,6 +70,5 @@ public class OrderProduct extends EntityBase {
         this.productId = product == null ? 0 : product.getId();
         this.product = product;
     }
-    
     
 }
