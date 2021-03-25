@@ -8,6 +8,7 @@ package views;
 import controllers.OrdersController;
 import entities.Order;
 import entities.OrderProduct;
+import entities.Product;
 import entities.User;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -109,6 +110,10 @@ public class OrderForm extends javax.swing.JFrame {
             : new SelectOption();
         orderProduct.setProductId(productSelected.value);
         orderProduct.setAmount(txt_product_amount.getText());
+        if (productSelected.value != 0) {
+            Product product = _ordersController.getProduct(productSelected.value);
+            orderProduct.setProduct(product);
+        }
         
         return orderProduct;
     }
@@ -224,6 +229,7 @@ public class OrderForm extends javax.swing.JFrame {
     }
     
     private void clearOrderSelection() {
+        lbl_total.setText("");
         setOrder(new Order());  
         clearOrderProductSelection();
     }
@@ -246,6 +252,11 @@ public class OrderForm extends javax.swing.JFrame {
         
         return tableModel;
     }
+    
+    private void updateTotal(double total) {
+        String formatted = String.format("%.2f", total).replace('.', ',');
+        lbl_total.setText("Total: " + formatted);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -263,6 +274,7 @@ public class OrderForm extends javax.swing.JFrame {
         pnl_actions = new javax.swing.JPanel();
         btn_clear = new javax.swing.JButton();
         btn_save = new javax.swing.JButton();
+        lbl_total = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tbl_list_order_products = new javax.swing.JTable();
@@ -339,6 +351,9 @@ public class OrderForm extends javax.swing.JFrame {
             }
         });
 
+        lbl_total.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        lbl_total.setName("lbl_total"); // NOI18N
+
         javax.swing.GroupLayout pnl_actionsLayout = new javax.swing.GroupLayout(pnl_actions);
         pnl_actions.setLayout(pnl_actionsLayout);
         pnl_actionsLayout.setHorizontalGroup(
@@ -346,6 +361,8 @@ public class OrderForm extends javax.swing.JFrame {
             .addGroup(pnl_actionsLayout.createSequentialGroup()
                 .addGap(32, 32, 32)
                 .addComponent(btn_clear, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(265, 265, 265)
+                .addComponent(lbl_total)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btn_save, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(27, 27, 27))
@@ -358,6 +375,10 @@ public class OrderForm extends javax.swing.JFrame {
                     .addComponent(btn_save, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_clear, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnl_actionsLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lbl_total)
+                .addGap(22, 22, 22))
         );
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Produtos"));
@@ -567,6 +588,7 @@ public class OrderForm extends javax.swing.JFrame {
                 removeRowOrderProductTable(orderProduct);
             }
         }
+        updateTotal(_orderCurrent.computeTotal());
         clearOrderProductSelection();
     }//GEN-LAST:event_btn_save_productActionPerformed
 
@@ -612,6 +634,7 @@ public class OrderForm extends javax.swing.JFrame {
     private javax.swing.JLabel lbl_name;
     private javax.swing.JLabel lbl_name2;
     private javax.swing.JLabel lbl_name3;
+    private javax.swing.JLabel lbl_total;
     private javax.swing.JPanel pnl_actions;
     private javax.swing.JPanel pnl_actions1;
     private javax.swing.JPanel pnl_fields;

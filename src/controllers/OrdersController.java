@@ -7,6 +7,7 @@ package controllers;
 
 import context.IAuthContext;
 import entities.Order;
+import entities.Product;
 import enums.Controller;
 import enums.CrudFunctionality;
 import java.util.ArrayList;
@@ -82,5 +83,9 @@ public class OrdersController extends ControllerBase<Order> {
     
     public ArrayList<SelectOption> getProductsFlat() {
         return _productRepository.getAllFlat();
+    }
+    
+    public Product getProduct(int id) {
+        return _productRepository.getById(id);
     }
 }

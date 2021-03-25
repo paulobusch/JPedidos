@@ -7,7 +7,9 @@ package repositories;
 
 import database.DatabaseAdapter;
 import entities.Product;
+import entities.User;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -56,7 +58,22 @@ public class ProductRepository implements IProductRepository {
 
     @Override
     public Product getById(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String sql = "select * from products where id=?;";
+        Connection connection = _adapter.getConnection();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql,
+                ResultSet.TYPE_SCROLL_SENSITIVE,
+                ResultSet.CONCUR_READ_ONLY
+            );
+            
+            preparedStatement.setInt(1, id);
+            
+            ResultSet result = preparedStatement.executeQuery();
+            result.next();
+            return mapProduct(result);
+        } catch(SQLException ex) {
+            throw new JPedidosException("Falha na execução da consulta do produto pelo id", ex);
+        }
     }
 
     @Override
@@ -77,6 +94,19 @@ public class ProductRepository implements IProductRepository {
     @Override
     public void delete(Product entity) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    private Product mapProduct(ResultSet cursor) {
+        try {
+            Product product = new Product();
+            product.setId(cursor.getInt("id"));
+            product.setName(cursor.getString("name"));
+            product.setDescription(cursor.getString("description"));
+            product.setPrice(cursor.getDouble("price"));
+            return product;
+        } catch(SQLException ex) {
+            throw new JPedidosException("Falha ao mapear Product", ex);
+        }
     }
 
 
