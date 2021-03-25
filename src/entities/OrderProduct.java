@@ -6,6 +6,7 @@
 package entities;
 
 import java.util.regex.Pattern;
+import utils.JPedidosException;
 
 /**
  *
@@ -71,4 +72,10 @@ public class OrderProduct extends EntityBase {
         this.product = product;
     }
     
+    public double computeTotal() {
+        if (product == null)
+            throw new JPedidosException("O produto deve ser carregado para cálculo do preço!");
+        
+        return amount * product.getPrice();
+    }
 }

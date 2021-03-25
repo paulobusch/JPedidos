@@ -175,6 +175,7 @@ public class OrderForm extends javax.swing.JFrame {
         columns.add(String.valueOf(orderProduct.getId()));
         columns.add(getProductSelected(orderProduct.getProductId()).text);
         columns.add(String.valueOf(orderProduct.getAmount()));
+        columns.add(String.format("%.2f", orderProduct.computeTotal()).replace('.', ','));
         return columns;
     }
     
@@ -385,17 +386,17 @@ public class OrderForm extends javax.swing.JFrame {
 
         tbl_list_order_products.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "ID", "Produto", "Quantidade"
+                "ID", "Produto", "Quantidade", "Preço Total"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.Integer.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {

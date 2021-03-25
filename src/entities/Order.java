@@ -122,10 +122,7 @@ public class Order extends EntityBase {
         if (orderProducts.size() == 0) return 0;
         double total = 0;
         for (OrderProduct op : orderProducts) {
-            if (op.getProduct() == null)
-                throw new JPedidosException("O produto deve ser carregado para cálculo do preço!");
-            
-            total += op.getAmount() * op.getProduct().getPrice();
+            total += op.computeTotal();
         }
         
         return total;
