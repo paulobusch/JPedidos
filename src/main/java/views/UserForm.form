@@ -200,6 +200,8 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
                   <Component id="btn_clear" min="-2" pref="50" max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Component id="btn_change_key" min="-2" pref="50" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
                   <Component id="btn_trash" min="-2" pref="50" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -213,6 +215,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="btn_change_key" min="-2" pref="50" max="-2" attributes="0"/>
                       <Component id="btn_trash" min="-2" pref="50" max="-2" attributes="0"/>
                       <Component id="btn_save" min="-2" pref="50" max="-2" attributes="0"/>
                       <Component id="btn_clear" min="-2" pref="50" max="-2" attributes="0"/>
@@ -227,6 +230,14 @@
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="2" name="C:\Users\Paulo\Desktop\Cursos\UTFPR\7&#xba; Semestre\Oficina de Integra&#xe7;&#xe3;o 2\JPedidos\src\main\java\assets\clean-48.png"/>
+            </Property>
+            <Property name="name" type="java.lang.String" value="btn_clear" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btn_change_key">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="2" name="C:\Users\Paulo\Desktop\Cursos\UTFPR\7&#xba; Semestre\Oficina de Integra&#xe7;&#xe3;o 2\JPedidos\src\main\java\assets\key-48.png"/>
             </Property>
             <Property name="name" type="java.lang.String" value="btn_clear" noResource="true"/>
           </Properties>

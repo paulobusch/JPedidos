@@ -45,6 +45,7 @@ public class UserForm extends javax.swing.JFrame {
         cb_role = new javax.swing.JComboBox<>();
         pnl_actions = new javax.swing.JPanel();
         btn_clear = new javax.swing.JButton();
+        btn_change_key = new javax.swing.JButton();
         btn_save = new javax.swing.JButton();
         btn_trash = new javax.swing.JButton();
         list_scroll = new javax.swing.JScrollPane();
@@ -135,6 +136,9 @@ public class UserForm extends javax.swing.JFrame {
         btn_clear.setIcon(new javax.swing.ImageIcon("C:\\Users\\Paulo\\Desktop\\Cursos\\UTFPR\\7º Semestre\\Oficina de Integração 2\\JPedidos\\src\\main\\java\\assets\\clean-48.png")); // NOI18N
         btn_clear.setName("btn_clear"); // NOI18N
 
+        btn_change_key.setIcon(new javax.swing.ImageIcon("C:\\Users\\Paulo\\Desktop\\Cursos\\UTFPR\\7º Semestre\\Oficina de Integração 2\\JPedidos\\src\\main\\java\\assets\\key-48.png")); // NOI18N
+        btn_change_key.setName("btn_clear"); // NOI18N
+
         btn_save.setIcon(new javax.swing.ImageIcon("C:\\Users\\Paulo\\Desktop\\Cursos\\UTFPR\\7º Semestre\\Oficina de Integração 2\\JPedidos\\src\\main\\java\\assets\\save-all-48.png")); // NOI18N
         btn_save.setName("btn_add"); // NOI18N
         btn_save.addActionListener(new java.awt.event.ActionListener() {
@@ -153,6 +157,8 @@ public class UserForm extends javax.swing.JFrame {
             .addGroup(pnl_actionsLayout.createSequentialGroup()
                 .addGap(34, 34, 34)
                 .addComponent(btn_clear, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btn_change_key, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btn_trash, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -164,6 +170,7 @@ public class UserForm extends javax.swing.JFrame {
             .addGroup(pnl_actionsLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnl_actionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btn_change_key, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_trash, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_save, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_clear, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -218,6 +225,7 @@ public class UserForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_saveActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_change_key;
     private javax.swing.JButton btn_clear;
     private javax.swing.JButton btn_save;
     private javax.swing.JButton btn_trash;
