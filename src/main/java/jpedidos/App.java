@@ -34,7 +34,7 @@ import views.OrderForm;
  *
  * @author Paulo
  */
-public class JPedidos {
+public class App {
 
     /**
      * @param args the command line arguments

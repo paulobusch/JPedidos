@@ -300,7 +300,7 @@ public class OrderForm extends javax.swing.JFrame {
 
         cb_customer.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
 
-        btn_add_customer.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/plus-48.png"))); // NOI18N
+        btn_add_customer.setIcon(new javax.swing.ImageIcon("C:\\Users\\Paulo\\Desktop\\Cursos\\UTFPR\\7º Semestre\\Oficina de Integração 2\\JPedidos\\src\\main\\java\\assets\\plus-48.png")); // NOI18N
         btn_add_customer.setName("btn_add"); // NOI18N
         btn_add_customer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -336,7 +336,7 @@ public class OrderForm extends javax.swing.JFrame {
                 .addContainerGap(19, Short.MAX_VALUE))
         );
 
-        btn_clear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/clean-48.png"))); // NOI18N
+        btn_clear.setIcon(new javax.swing.ImageIcon("C:\\Users\\Paulo\\Desktop\\Cursos\\UTFPR\\7º Semestre\\Oficina de Integração 2\\JPedidos\\src\\main\\java\\assets\\clean-48.png")); // NOI18N
         btn_clear.setName("btn_clear"); // NOI18N
         btn_clear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -344,7 +344,7 @@ public class OrderForm extends javax.swing.JFrame {
             }
         });
 
-        btn_save.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/save-all-48.png"))); // NOI18N
+        btn_save.setIcon(new javax.swing.ImageIcon("C:\\Users\\Paulo\\Desktop\\Cursos\\UTFPR\\7º Semestre\\Oficina de Integração 2\\JPedidos\\src\\main\\java\\assets\\save-all-48.png")); // NOI18N
         btn_save.setName("btn_add"); // NOI18N
         btn_save.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -408,7 +408,7 @@ public class OrderForm extends javax.swing.JFrame {
             tbl_list_order_products.getColumnModel().getColumn(0).setPreferredWidth(1);
         }
 
-        btn_save_product.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/save-48.png"))); // NOI18N
+        btn_save_product.setIcon(new javax.swing.ImageIcon("C:\\Users\\Paulo\\Desktop\\Cursos\\UTFPR\\7º Semestre\\Oficina de Integração 2\\JPedidos\\src\\main\\java\\assets\\save-48.png")); // NOI18N
         btn_save_product.setName("btn_add"); // NOI18N
         btn_save_product.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -416,7 +416,7 @@ public class OrderForm extends javax.swing.JFrame {
             }
         });
 
-        btn_trash_product.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/trash-48.png"))); // NOI18N
+        btn_trash_product.setIcon(new javax.swing.ImageIcon("C:\\Users\\Paulo\\Desktop\\Cursos\\UTFPR\\7º Semestre\\Oficina de Integração 2\\JPedidos\\src\\main\\java\\assets\\trash-48.png")); // NOI18N
         btn_trash_product.setEnabled(false);
         btn_trash_product.setName("btn_add"); // NOI18N
         btn_trash_product.addActionListener(new java.awt.event.ActionListener() {
@@ -425,7 +425,7 @@ public class OrderForm extends javax.swing.JFrame {
             }
         });
 
-        btn_clear_product.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/clean-48.png"))); // NOI18N
+        btn_clear_product.setIcon(new javax.swing.ImageIcon("C:\\Users\\Paulo\\Desktop\\Cursos\\UTFPR\\7º Semestre\\Oficina de Integração 2\\JPedidos\\src\\main\\java\\assets\\clean-48.png")); // NOI18N
         btn_clear_product.setName("btn_clear"); // NOI18N
         btn_clear_product.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

@@ -31,7 +31,9 @@ create table orders (
   id int not null auto_increment,
   user_id int not null, 
   customer_id int not null,
-  date datetime not null default now(),
+  status enum('aberto', 'fechado') not null default 'aberto',
+  open_date datetime not null default now(),
+  close_date datetime,
   
   primary key(id),
 

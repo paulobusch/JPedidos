@@ -35,9 +35,13 @@ Como um admin, eu quero inserir, atualizar e remover usuários de diferentes tip
 
 Como um gerente, eu quero inserir, atualizar e remover produtos para que possam ser vendidos aos clientes.
 
-- E5 - listar pedidos
+- E5 - Listar pedidos
 
-Como um gerente e funcionário, eu quero listar os pedidos para acompanhar as vendas. 
+Como um gerente e funcionário, eu quero listar os pedidos (abertos e fechados) para acompanhar as vendas.
+
+- E6 - Fechar pedido
+
+Como um funcionário, eu quero fechar um pedido para registrar que o pedido foi entregue ao cliente.
 
 ## Regras de negócio
 
@@ -45,7 +49,7 @@ Como um gerente e funcionário, eu quero listar os pedidos para acompanhar as ve
 
 - Produto: possui nome curto, descrição e preço unitário. 
 
-- Pedido: possui o nome e telefone do cliente, e contém um ou mais produtos associados. Cada produto tem uma quantidade de no mínimo 1 (um). O valor total do pedido deve ser calculado. 
+- Pedido: possui o nome e telefone do cliente, e contém um ou mais produtos associados. Cada produto tem uma quantidade de no mínimo 1 (um). O valor total do pedido deve ser calculado. O pedido quando é cadastrado está inicialmente no status 'aberto', e muda para o status 'fechado' quando é entregue ao cliente. Tanto a data e hora de abertura e fechamento do pedido devem ser registrados.
 
 ## Estrutura básica do projeto
 

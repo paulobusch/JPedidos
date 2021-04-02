@@ -7,12 +7,9 @@ package views;
 
 import context.IAuthContext;
 import controllers.OrdersController;
-import controllers.ProductsController;
 import entities.User;
 import enums.Controller;
 import enums.CrudFunctionality;
-import javafx.application.Application;
-import validators.OrderProductValidator;
 
 /**
  *
