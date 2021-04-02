@@ -97,6 +97,11 @@ public class ChangePasswordForm extends javax.swing.JFrame {
 
         btn_confirm.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         btn_confirm.setText("Alterar");
+        btn_confirm.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_confirmActionPerformed(evt);
+            }
+        });
 
         btn_cancel.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         btn_cancel.setText("Cancelar");
@@ -149,6 +154,10 @@ public class ChangePasswordForm extends javax.swing.JFrame {
     private void btn_cancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cancelActionPerformed
         this.dispose();
     }//GEN-LAST:event_btn_cancelActionPerformed
+
+    private void btn_confirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_confirmActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_confirmActionPerformed
 
     /**
      * @param args the command line arguments

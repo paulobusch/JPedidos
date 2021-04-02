@@ -11,6 +11,7 @@ create table users (
   email varchar(80) not null,
   login varchar(35) not null,
   password varchar(80) not null,
+  password_temporary bit not null default 1,
   role enum('Admin', 'Gerente', 'Funcionário') not null,
   
   primary key(id),
