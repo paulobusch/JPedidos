@@ -54,8 +54,7 @@ public class OrderList extends javax.swing.JFrame {
         _orderProductValidator = ordersController.getValidator().getOrderProductValidator();
         
         loadSelectFields();
-        updateTitle();
-        
+        updateTitle();        
     }
     
     private void updateTitle() {

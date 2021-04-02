@@ -6,6 +6,20 @@
 package views;
 
 import controllers.UsersController;
+import entities.User;
+import enums.Role;
+import java.util.ArrayList;
+import static java.util.Arrays.asList;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
+import models.SelectOption;
+import models.SelectRole;
+import utils.Result;
+import utils.ResultData;
 
 /**
  *
@@ -16,11 +30,68 @@ public class UserForm extends javax.swing.JFrame {
     /**
      * Creates new form UserForm
      */
-    private UsersController _userController;
+    private UsersController _usersController;
+
+    private User _userCurrent;
+    private List<SelectRole> _roles;
+    private DefaultTableModel _userTableModel;
     
-    public UserForm(UsersController userController) {
+    public UserForm(UsersController usersController) {
         initComponents();
-        _userController = userController;
+        _usersController = usersController;
+        
+        loadSelectFields();
+        updateTitle();  
+    }
+    
+    private void updateTitle() {
+        User currentUser = _usersController.getCurrentUser();
+        setTitle("JPedidos - Gerenciar Usuários (" + currentUser.getRoleString() + ")");
+    }
+    
+    private void loadSelectFields() {        
+        cb_role.removeAllItems();
+        
+        _roles = asList(
+            new SelectRole(Role.Admin, "Admin"),
+            new SelectRole(Role.Funcionario, "Funcionário"),
+            new SelectRole(Role.Gerente, "Gerente")
+        );
+        
+        for (SelectRole role : _roles)
+            cb_role.addItem(role);  
+    }
+    
+    private User getUser() {
+        User user = _userCurrent != null
+            ? _userCurrent
+            : new User();
+        
+        user.setName(txt_name.getText());
+        user.setLogin(txt_login.getText());
+        user.setEmail(txt_email.getText());
+        SelectRole roleSelected = cb_role.getSelectedItem() != null
+            ? (SelectRole)cb_role.getSelectedItem()
+            : new SelectRole();
+        user.setRole(roleSelected.value);
+        
+        return user;
+    }
+    
+    private void setUser(User user) {
+        _userCurrent = user;
+        txt_name.setText(user.getName());
+        txt_login.setText(user.getLogin());
+        txt_email.setText(user.getEmail());
+        cb_role.getModel().setSelectedItem(getRoleSelected(user.getRole()));
+    }
+    
+    private SelectRole getRoleSelected(Role role) {
+        for (SelectRole sr : _roles) {
+            if (sr.value == role) return sr;
+        }
+        
+        return new SelectRole();
     }
 
     /**
@@ -42,7 +113,7 @@ public class UserForm extends javax.swing.JFrame {
         lbl_email = new javax.swing.JLabel();
         txt_email = new java.awt.TextField();
         lbl_role = new javax.swing.JLabel();
-        cb_role = new javax.swing.JComboBox<>();
+        cb_role = new javax.swing.JComboBox<SelectRole>();
         pnl_actions = new javax.swing.JPanel();
         btn_clear = new javax.swing.JButton();
         btn_change_key = new javax.swing.JButton();
@@ -66,6 +137,11 @@ public class UserForm extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("JPedidos - Usuários");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         lbl_name.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         lbl_name.setText("Nome:");
@@ -218,18 +294,110 @@ public class UserForm extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_saveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_saveActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btn_saveActionPerformed
 
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        _userTableModel = (DefaultTableModel)tbl_list.getModel();                       
+        
+        userTableEvents();
+        clearUserTable();
+        clearUserSelection();
+        
+        ResultData<ArrayList<User>> result = _usersController.getAll();
+        if (result.hasError()){
+            displayResult(Result.error(result.getErrorMessage()));
+            return;
+        }
+        
+        for (User user : result.getData()) {
+            addRowUserTable(user);
+        }
+    }//GEN-LAST:event_formWindowOpened
+    
+    private void clearUserTable() {
+        _userTableModel.setRowCount(0);
+    }
+    
+    private void clearUserSelection() {
+        btn_trash.setEnabled(false);
+        tbl_list.clearSelection();
+        setUser(new User());  
+    }
+    
+    private void userTableEvents() {
+        ListSelectionModel model = tbl_list.getSelectionModel();
+        model.addListSelectionListener(new ListSelectionListener(){
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                int row = tbl_list.getSelectedRow();
+                if (row == -1) {
+                    setUser(new User());
+                    return;
+                }
+                int id = getTableIdByIndex(_userTableModel, row);
+                ResultData<User> result = _usersController.getById(id);
+                if (result.hasError()){
+                    displayResult(Result.error(result.getErrorMessage()));
+                    return;
+                }
+                btn_trash.setEnabled(true);
+                setUser(result.getData());
+            }
+        });
+    }
+    
+    private int getTableIdByIndex(DefaultTableModel model, int index) {
+        Object raw = model.getValueAt(index, 0);
+        return Integer.parseInt(raw.toString());
+    }
+    
+    private void displayResult(Result result) {
+        JOptionPane.showMessageDialog(this, result.getErrorMessage(), "Informação", JOptionPane.INFORMATION_MESSAGE);
+    }    
+    
+    private ArrayList<Object> getUserColumnsData(User user) {
+        ArrayList<Object> columns = new ArrayList<>();
+        columns.add(user.getId());
+        columns.add(user.getName());
+        columns.add(user.getEmail());
+        columns.add(user.getLogin());
+        return columns;
+    }
+    
+    private void addRowUserTable(User user) {
+        ArrayList<Object> columnsData = getUserColumnsData(user);
+        _userTableModel.addRow(columnsData.toArray());
+    }
+    
+    private void editRowOrderTable(User user) {
+        ArrayList<Object> columnsData = getUserColumnsData(user);
+        int row = getRowIndexWithId(_userTableModel, user.getId());
+        for (Object data : columnsData){
+            int col = columnsData.indexOf(data);
+            _userTableModel.setValueAt(data, row, col);
+        }
+    }
+    
+    private int getRowIndexWithId(DefaultTableModel model, int id) {
+        for (int row = 0; row < model.getRowCount(); row++){
+            Object raw = model.getValueAt(row, 0);
+            int rowId = Integer.parseInt(raw.toString());
+            if (rowId == id) return row;
+        }
+        return -1;
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_change_key;
     private javax.swing.JButton btn_clear;
     private javax.swing.JButton btn_save;
     private javax.swing.JButton btn_trash;
-    private javax.swing.JComboBox<String> cb_role;
+    private javax.swing.JComboBox<SelectRole> cb_role;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
     private javax.swing.JLabel lbl_email;

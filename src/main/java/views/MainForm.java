@@ -7,6 +7,7 @@ package views;
 
 import context.IAuthContext;
 import controllers.OrdersController;
+import controllers.UsersController;
 import entities.User;
 import enums.Controller;
 import enums.CrudFunctionality;
@@ -23,15 +24,18 @@ public class MainForm extends javax.swing.JFrame {
     
     private IAuthContext _authContext;
     private OrdersController _ordersController;
+    private UsersController _usersController;
     
     public MainForm(
         IAuthContext authContext,
-        OrdersController ordersController
+        OrdersController ordersController,
+        UsersController usersController
     ) {
         initComponents();
         
         _authContext = authContext;
         _ordersController = ordersController;
+        _usersController = usersController;
         updateTitle();
         toggleMenus();
     }
@@ -75,6 +79,11 @@ public class MainForm extends javax.swing.JFrame {
 
         mi_users.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         mi_users.setText("Usuários");
+        mi_users.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mi_usersActionPerformed(evt);
+            }
+        });
         jMenu1.add(mi_users);
 
         mi_products.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -147,6 +156,10 @@ public class MainForm extends javax.swing.JFrame {
     private void mi_new_orderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mi_new_orderActionPerformed
         new OrderForm(_ordersController).setVisible(true);
     }//GEN-LAST:event_mi_new_orderActionPerformed
+
+    private void mi_usersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mi_usersActionPerformed
+        new UserForm(_usersController).setVisible(true);
+    }//GEN-LAST:event_mi_usersActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu jMenu1;
