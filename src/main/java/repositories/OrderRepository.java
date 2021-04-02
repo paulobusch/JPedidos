@@ -96,7 +96,7 @@ public class OrderRepository implements IOrderRepository {
 
     @Override
     public ArrayList<Order> getAll() {
-        String sql = "select o.id, o.customer_id, c.name as customer_name, sum(p.price * op.amount) as total_price, o.date from orders o\n" +
+        String sql = "select o.id, o.customer_id, c.name as customer_name, sum(p.price * op.amount) as total_price, o.open_date, o.close_date, o.status from orders o\n" +
             "join customers c on c.id=o.customer_id\n" +
             "join orders_products op on op.order_id=o.id\n" +
             "join products p on p.id=op.product_id\n" +
@@ -121,7 +121,7 @@ public class OrderRepository implements IOrderRepository {
 
     @Override
     public void create(Order order) {
-        String sqlInsert = "insert into orders (user_id, customer_id, date) values(?, ?, ?);";
+        String sqlInsert = "insert into orders (user_id, customer_id, open_date) values(?, ?, ?);";
         String sqlLastId = "select max(id) as id from orders;";
         Connection connection = _adapter.getConnection();
         try {
@@ -156,7 +156,7 @@ public class OrderRepository implements IOrderRepository {
 
     @Override
     public void update(Order order) {
-        String sql = "update orders set customer_id=? where id=?;";
+        String sql = "update orders set customer_id=?, status=?, close_date=? where id=?;";
         Connection connection = _adapter.getConnection();
         try {
             _adapter.beginTransaction();
@@ -167,7 +167,7 @@ public class OrderRepository implements IOrderRepository {
             );
             
             mapUpdateOrderParams(preparedStatement, order);
-            preparedStatement.setInt(2, order.getId());
+            preparedStatement.setInt(4, order.getId());
             int rows = preparedStatement.executeUpdate();
             if (rows == 0) throw new JPedidosException("Nenhum pedido foi atualizado");
             
@@ -381,9 +381,12 @@ public class OrderRepository implements IOrderRepository {
             order.setId(cursor.getInt("id"));
             order.setCustomer(customer);
             order.setTotal(cursor.getDouble("total_price"));
+            order.setStatus(cursor.getString("status"));
             
             try {
-                order.setDate(df.parse(cursor.getString("date")));
+                String closeDate = cursor.getString("close_date");
+                order.setOpenDate(df.parse(cursor.getString("open_date")));
+                order.setCloseDate(closeDate == null || closeDate.equals("") ? null : df.parse(closeDate));
             } catch (ParseException ex) {
                 throw new JPedidosException("Falha ao converter data do pedido", ex);
             } 
@@ -415,7 +418,7 @@ public class OrderRepository implements IOrderRepository {
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             preparedStatement.setInt(1, order.getUserId());
             preparedStatement.setInt(2, order.getCustomerId());
-            preparedStatement.setString(3, df.format(order.getDate()));
+            preparedStatement.setString(3, df.format(order.getOpenDate()));
         } catch(SQLException ex) {
             throw new JPedidosException("Falha ao mapear Params", ex);
         }
@@ -423,7 +426,10 @@ public class OrderRepository implements IOrderRepository {
     
     private void mapUpdateOrderParams(PreparedStatement preparedStatement, Order order) {
         try {
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             preparedStatement.setInt(1, order.getCustomerId());
+            preparedStatement.setString(2, order.getStatusString());
+            preparedStatement.setString(3, df.format(order.getCloseDate()));
         } catch(SQLException ex) {
             throw new JPedidosException("Falha ao mapear Params", ex);
         }

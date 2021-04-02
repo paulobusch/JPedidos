@@ -69,7 +69,7 @@ public class OrderForm extends javax.swing.JFrame {
             ? (SelectOption)cb_customer.getSelectedItem()
             : new SelectOption();
         order.setCustomerId(customerSelected.value);
-        order.setDate(new Date());
+        order.setOpenDate(new Date());
         
         return order;
     }

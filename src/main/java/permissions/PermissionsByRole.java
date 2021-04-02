@@ -22,16 +22,32 @@ public class PermissionsByRole {
         HashMap<Role, List<ControllerFunctionalities>> roleFuncionalities = new HashMap<Role, List<ControllerFunctionalities>>();
         
         roleFuncionalities.put(Role.Admin, asList(
-            new ControllerFunctionalities(Controller.Users, asList(CrudFunctionality.Create))
+            new ControllerFunctionalities(Controller.Users, asList(
+                CrudFunctionality.Read,
+                CrudFunctionality.List,
+                CrudFunctionality.Create,
+                CrudFunctionality.Update,
+                CrudFunctionality.Delete
+            ))
         ));
         
         roleFuncionalities.put(Role.Gerente, asList(
-            new ControllerFunctionalities(Controller.Products, asList(CrudFunctionality.Create, CrudFunctionality.Update)),
+            new ControllerFunctionalities(Controller.Products, asList(
+                CrudFunctionality.Read,
+                CrudFunctionality.List,
+                CrudFunctionality.Create,
+                CrudFunctionality.Update,
+                CrudFunctionality.Delete
+            )),
             new ControllerFunctionalities(Controller.Orders, asList(CrudFunctionality.List))
         ));
         
         roleFuncionalities.put(Role.Funcionario, asList(
-            new ControllerFunctionalities(Controller.Orders, asList(CrudFunctionality.Create))
+            new ControllerFunctionalities(Controller.Orders, asList(
+                CrudFunctionality.List,
+                CrudFunctionality.Create,
+                CrudFunctionality.Update
+            ))
         ));
         
         return roleFuncionalities;

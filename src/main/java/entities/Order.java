@@ -5,12 +5,11 @@
  */
 package entities;
 
-import static enums.CrudFunctionality.List;
+import enums.OrderStatus;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import utils.JPedidosException;
 
 /**
  *
@@ -19,7 +18,9 @@ import utils.JPedidosException;
 public class Order extends EntityBase {
     private int customerId;
     private int userId;
-    private Date date;
+    private OrderStatus status;
+    private Date openDate;
+    private Date closeDate;
     
     private double total;
     private Customer customer;
@@ -72,12 +73,48 @@ public class Order extends EntityBase {
         this.total = total;
     }
 
-    public Date getDate() {
-        return date;
+    public OrderStatus getStatus() {
+        return status;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public String getStatusString() {
+        if (this.status == OrderStatus.Open) return "aberto";
+        if (this.status == OrderStatus.Close) return "fechado";
+        
+        return null;
+    }
+
+    public void setStatus(OrderStatus status) {
+        this.status = status;
+    }
+
+    public void setStatus(String status) {
+        switch(status) {
+            case "aberto":
+                this.status = OrderStatus.Open;
+                return;
+            case "fechado":
+                this.status = OrderStatus.Close;
+                return;
+        }
+        
+        this.status = null;
+    }
+
+    public Date getOpenDate() {
+        return openDate;
+    }
+
+    public void setOpenDate(Date openDate) {
+        this.openDate = openDate;
+    }
+
+    public Date getCloseDate() {
+        return closeDate;
+    }
+
+    public void setCloseDate(Date closeDate) {
+        this.closeDate = closeDate;
     }
     
     public List<OrderProduct> getOrderProducts() {

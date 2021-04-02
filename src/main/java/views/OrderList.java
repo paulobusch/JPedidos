@@ -70,7 +70,7 @@ public class OrderList extends javax.swing.JFrame {
             ? (SelectOption)cb_customer.getSelectedItem()
             : new SelectOption();
         order.setCustomerId(customerSelected.value);
-        order.setDate(new Date());
+        order.setOpenDate(new Date());
         
         return order;
     }
@@ -177,7 +177,7 @@ public class OrderList extends javax.swing.JFrame {
         columns.add(order.getId());
         columns.add(getCustomerSelected(order.getCustomerId()).text);
         columns.add(order.getTotal());
-        columns.add(df.format(order.getDate()));
+        columns.add(df.format(order.getOpenDate()));
         return columns;
     }
     
