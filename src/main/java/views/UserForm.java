@@ -5,22 +5,22 @@
  */
 package views;
 
-import controllers.ProductsController;
+import controllers.UsersController;
 
 /**
  *
  * @author Paulo
  */
-public class ProductForm extends javax.swing.JFrame {
+public class UserForm extends javax.swing.JFrame {
 
     /**
-     * Creates new form ProductForm
+     * Creates new form UserForm
      */
-    private ProductsController _productController;
+    private UsersController _userController;
     
-    public ProductForm(ProductsController productController) {
+    public UserForm(UsersController userController) {
         initComponents();
-        _productController = productController;
+        _userController = userController;
     }
 
     /**
@@ -37,11 +37,12 @@ public class ProductForm extends javax.swing.JFrame {
         pnl_fields = new javax.swing.JPanel();
         lbl_name = new javax.swing.JLabel();
         txt_name = new java.awt.TextField();
-        lbl_price = new javax.swing.JLabel();
-        txt_price = new javax.swing.JFormattedTextField();
-        lbl_description = new javax.swing.JLabel();
-        txt_scroll = new javax.swing.JScrollPane();
-        txt_description = new javax.swing.JTextArea();
+        lbl_login = new javax.swing.JLabel();
+        txt_login = new java.awt.TextField();
+        lbl_email = new javax.swing.JLabel();
+        txt_email = new java.awt.TextField();
+        lbl_role = new javax.swing.JLabel();
+        cb_role = new javax.swing.JComboBox<>();
         pnl_actions = new javax.swing.JPanel();
         btn_clear = new javax.swing.JButton();
         btn_save = new javax.swing.JButton();
@@ -63,7 +64,7 @@ public class ProductForm extends javax.swing.JFrame {
         jScrollPane2.setViewportView(jTable1);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("JPedidos - Produtos");
+        setTitle("JPedidos - Usuários");
 
         lbl_name.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         lbl_name.setText("Nome:");
@@ -71,38 +72,46 @@ public class ProductForm extends javax.swing.JFrame {
         txt_name.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         txt_name.setName("txt_name"); // NOI18N
 
-        lbl_price.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        lbl_price.setText("Preço:");
+        lbl_login.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        lbl_login.setText("Login:");
 
-        txt_price.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        txt_price.setName("txt_price"); // NOI18N
+        txt_login.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        txt_login.setName("txt_login"); // NOI18N
 
-        lbl_description.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        lbl_description.setText("Descrição:");
+        lbl_email.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        lbl_email.setText("Email:");
 
-        txt_description.setColumns(20);
-        txt_description.setRows(5);
-        txt_description.setName("txt_description"); // NOI18N
-        txt_scroll.setViewportView(txt_description);
+        txt_email.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
+        txt_email.setName("txt_name"); // NOI18N
+
+        lbl_role.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        lbl_role.setText("Papel:");
+
+        cb_role.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
 
         javax.swing.GroupLayout pnl_fieldsLayout = new javax.swing.GroupLayout(pnl_fields);
         pnl_fields.setLayout(pnl_fieldsLayout);
         pnl_fieldsLayout.setHorizontalGroup(
             pnl_fieldsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnl_fieldsLayout.createSequentialGroup()
-                .addGap(28, 28, 28)
+                .addGap(38, 38, 38)
                 .addGroup(pnl_fieldsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lbl_description)
-                    .addComponent(lbl_name))
-                .addGap(18, 18, 18)
+                    .addComponent(lbl_name)
+                    .addComponent(lbl_email))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnl_fieldsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txt_email, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_name, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(43, 43, 43)
                 .addGroup(pnl_fieldsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(pnl_fieldsLayout.createSequentialGroup()
-                        .addComponent(txt_name, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(45, 45, 45)
-                        .addComponent(lbl_price)
-                        .addGap(18, 18, 18)
-                        .addComponent(txt_price, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(txt_scroll))
+                        .addComponent(lbl_login)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txt_login, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnl_fieldsLayout.createSequentialGroup()
+                        .addComponent(lbl_role)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cb_role, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnl_fieldsLayout.setVerticalGroup(
@@ -110,16 +119,17 @@ public class ProductForm extends javax.swing.JFrame {
             .addGroup(pnl_fieldsLayout.createSequentialGroup()
                 .addGap(25, 25, 25)
                 .addGroup(pnl_fieldsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(pnl_fieldsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(lbl_price)
-                        .addComponent(txt_price, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(txt_name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_name))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
-                .addGroup(pnl_fieldsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbl_description)
-                    .addComponent(txt_scroll, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(17, 17, 17))
+                    .addComponent(txt_login, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_login)
+                    .addComponent(lbl_name)
+                    .addComponent(txt_name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(27, 27, 27)
+                .addGroup(pnl_fieldsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lbl_email)
+                    .addComponent(txt_email, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_role)
+                    .addComponent(cb_role, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
 
         btn_clear.setIcon(new javax.swing.ImageIcon("C:\\Users\\Paulo\\Desktop\\Cursos\\UTFPR\\7º Semestre\\Oficina de Integração 2\\JPedidos\\src\\main\\java\\assets\\clean-48.png")); // NOI18N
@@ -135,11 +145,6 @@ public class ProductForm extends javax.swing.JFrame {
 
         btn_trash.setIcon(new javax.swing.ImageIcon("C:\\Users\\Paulo\\Desktop\\Cursos\\UTFPR\\7º Semestre\\Oficina de Integração 2\\JPedidos\\src\\main\\java\\assets\\trash-48.png")); // NOI18N
         btn_trash.setName("btn_add"); // NOI18N
-        btn_trash.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_trashActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout pnl_actionsLayout = new javax.swing.GroupLayout(pnl_actions);
         pnl_actions.setLayout(pnl_actionsLayout);
@@ -167,17 +172,17 @@ public class ProductForm extends javax.swing.JFrame {
 
         tbl_list.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "ID", "Nome", "Preço"
+                "ID", "Nome", "Email", "Login"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.Float.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -212,26 +217,23 @@ public class ProductForm extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btn_saveActionPerformed
 
-    private void btn_trashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_trashActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btn_trashActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_clear;
     private javax.swing.JButton btn_save;
     private javax.swing.JButton btn_trash;
+    private javax.swing.JComboBox<String> cb_role;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
-    private javax.swing.JLabel lbl_description;
+    private javax.swing.JLabel lbl_email;
+    private javax.swing.JLabel lbl_login;
     private javax.swing.JLabel lbl_name;
-    private javax.swing.JLabel lbl_price;
+    private javax.swing.JLabel lbl_role;
     private javax.swing.JScrollPane list_scroll;
     private javax.swing.JPanel pnl_actions;
     private javax.swing.JPanel pnl_fields;
     private javax.swing.JTable tbl_list;
-    private javax.swing.JTextArea txt_description;
+    private java.awt.TextField txt_email;
+    private java.awt.TextField txt_login;
     private java.awt.TextField txt_name;
-    private javax.swing.JFormattedTextField txt_price;
-    private javax.swing.JScrollPane txt_scroll;
     // End of variables declaration//GEN-END:variables
 }
