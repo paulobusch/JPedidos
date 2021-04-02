@@ -17,6 +17,7 @@ public class User extends EntityBase {
     private String name;
     private String login;
     private String password;
+    public boolean passwordTemporary;
     private String email;
     private Role role;
 
@@ -99,6 +100,14 @@ public class User extends EntityBase {
         }
         
         this.role = null;
+    }
+
+    public boolean isPasswordTemporary() {
+        return passwordTemporary;
+    }
+
+    public void setPasswordTemporary(boolean passwordTemporary) {
+        this.passwordTemporary = passwordTemporary;
     }
     
     

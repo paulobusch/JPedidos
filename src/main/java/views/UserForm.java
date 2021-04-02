@@ -113,7 +113,7 @@ public class UserForm extends javax.swing.JFrame {
         lbl_email = new javax.swing.JLabel();
         txt_email = new java.awt.TextField();
         lbl_role = new javax.swing.JLabel();
-        cb_role = new javax.swing.JComboBox<SelectRole>();
+        cb_role = new javax.swing.JComboBox<>();
         pnl_actions = new javax.swing.JPanel();
         btn_clear = new javax.swing.JButton();
         btn_change_key = new javax.swing.JButton();
@@ -135,7 +135,7 @@ public class UserForm extends javax.swing.JFrame {
         ));
         jScrollPane2.setViewportView(jTable1);
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("JPedidos - Usuários");
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
@@ -179,17 +179,18 @@ public class UserForm extends javax.swing.JFrame {
                 .addGroup(pnl_fieldsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txt_email, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txt_name, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(43, 43, 43)
-                .addGroup(pnl_fieldsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(pnl_fieldsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnl_fieldsLayout.createSequentialGroup()
-                        .addComponent(lbl_login)
+                        .addGap(43, 43, 43)
+                        .addComponent(lbl_login))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnl_fieldsLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txt_login, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnl_fieldsLayout.createSequentialGroup()
-                        .addComponent(lbl_role)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(cb_role, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(lbl_role)))
+                .addGap(18, 18, 18)
+                .addGroup(pnl_fieldsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(txt_login, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE)
+                    .addComponent(cb_role, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
         pnl_fieldsLayout.setVerticalGroup(
             pnl_fieldsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -197,23 +198,36 @@ public class UserForm extends javax.swing.JFrame {
                 .addGap(25, 25, 25)
                 .addGroup(pnl_fieldsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(txt_login, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_login)
-                    .addComponent(lbl_name)
-                    .addComponent(txt_name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txt_name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_name, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbl_login, javax.swing.GroupLayout.Alignment.LEADING))
                 .addGap(27, 27, 27)
                 .addGroup(pnl_fieldsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lbl_email)
-                    .addComponent(txt_email, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_role)
-                    .addComponent(cb_role, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnl_fieldsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(cb_role, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lbl_role))
+                    .addGroup(pnl_fieldsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(lbl_email)
+                        .addComponent(txt_email, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(23, Short.MAX_VALUE))
         );
 
         btn_clear.setIcon(new javax.swing.ImageIcon("C:\\Users\\Paulo\\Desktop\\Cursos\\UTFPR\\7º Semestre\\Oficina de Integração 2\\JPedidos\\src\\main\\java\\assets\\clean-48.png")); // NOI18N
         btn_clear.setName("btn_clear"); // NOI18N
+        btn_clear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_clearActionPerformed(evt);
+            }
+        });
 
         btn_change_key.setIcon(new javax.swing.ImageIcon("C:\\Users\\Paulo\\Desktop\\Cursos\\UTFPR\\7º Semestre\\Oficina de Integração 2\\JPedidos\\src\\main\\java\\assets\\key-48.png")); // NOI18N
+        btn_change_key.setEnabled(false);
         btn_change_key.setName("btn_clear"); // NOI18N
+        btn_change_key.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_change_keyActionPerformed(evt);
+            }
+        });
 
         btn_save.setIcon(new javax.swing.ImageIcon("C:\\Users\\Paulo\\Desktop\\Cursos\\UTFPR\\7º Semestre\\Oficina de Integração 2\\JPedidos\\src\\main\\java\\assets\\save-all-48.png")); // NOI18N
         btn_save.setName("btn_add"); // NOI18N
@@ -224,7 +238,13 @@ public class UserForm extends javax.swing.JFrame {
         });
 
         btn_trash.setIcon(new javax.swing.ImageIcon("C:\\Users\\Paulo\\Desktop\\Cursos\\UTFPR\\7º Semestre\\Oficina de Integração 2\\JPedidos\\src\\main\\java\\assets\\trash-48.png")); // NOI18N
+        btn_trash.setEnabled(false);
         btn_trash.setName("btn_add"); // NOI18N
+        btn_trash.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_trashActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnl_actionsLayout = new javax.swing.GroupLayout(pnl_actions);
         pnl_actions.setLayout(pnl_actionsLayout);
@@ -298,7 +318,27 @@ public class UserForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_saveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_saveActionPerformed
-        // TODO add your handling code here:
+        User user = getUser();
+        boolean byInsert = user.getId() == 0;
+        if (byInsert) user.setPassword(_usersController.generatePassword());
+        Result result = byInsert
+            ? _usersController.create(user)
+            : _usersController.update(user);
+                
+        if (result.hasError()){
+            displayResult(result);
+            return;
+        }
+        
+        if (byInsert) {
+            addRowUserTable(user);
+        } else {
+            editRowUserTable(user);
+        }
+        
+        if (byInsert) new PasswordForm(user.getPassword()).setVisible(true);
+        
+        clearUserSelection();
     }//GEN-LAST:event_btn_saveActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
@@ -318,6 +358,40 @@ public class UserForm extends javax.swing.JFrame {
             addRowUserTable(user);
         }
     }//GEN-LAST:event_formWindowOpened
+
+    private void btn_clearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_clearActionPerformed
+        clearUserSelection();
+    }//GEN-LAST:event_btn_clearActionPerformed
+
+    private void btn_trashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_trashActionPerformed
+        int option = JOptionPane.showConfirmDialog(this, "Deseja excluir o usuário?", "Excluir", JOptionPane.OK_CANCEL_OPTION);
+        if(option != JOptionPane.OK_OPTION) return;
+        User user = getUser();
+        Result result = _usersController.delete(user.getId());
+        if (result.hasError()) {
+            displayResult(result);
+            return;        
+        }
+        
+        removeRowUserTable(user);
+        clearUserSelection();
+    }//GEN-LAST:event_btn_trashActionPerformed
+
+    private void btn_change_keyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_change_keyActionPerformed
+        int option = JOptionPane.showConfirmDialog(this, "Deseja gerar uma nova senha para o usuário?", "Excluir", JOptionPane.OK_CANCEL_OPTION);
+        if(option != JOptionPane.OK_OPTION) return;
+        User user = getUser();
+        String randomPassword = _usersController.generatePassword();
+        Result result = _usersController.resetPassword(user.getId(), randomPassword);
+        if (result.hasError()) {
+            displayResult(result);
+            return;        
+        }
+        
+        new PasswordForm(randomPassword).setVisible(true);
+        
+        clearUserSelection();
+    }//GEN-LAST:event_btn_change_keyActionPerformed
     
     private void clearUserTable() {
         _userTableModel.setRowCount(0);
@@ -325,6 +399,7 @@ public class UserForm extends javax.swing.JFrame {
     
     private void clearUserSelection() {
         btn_trash.setEnabled(false);
+        btn_change_key.setEnabled(false);
         tbl_list.clearSelection();
         setUser(new User());  
     }
@@ -346,6 +421,7 @@ public class UserForm extends javax.swing.JFrame {
                     return;
                 }
                 btn_trash.setEnabled(true);
+                btn_change_key.setEnabled(true);
                 setUser(result.getData());
             }
         });
@@ -374,13 +450,18 @@ public class UserForm extends javax.swing.JFrame {
         _userTableModel.addRow(columnsData.toArray());
     }
     
-    private void editRowOrderTable(User user) {
+    private void editRowUserTable(User user) {
         ArrayList<Object> columnsData = getUserColumnsData(user);
         int row = getRowIndexWithId(_userTableModel, user.getId());
         for (Object data : columnsData){
             int col = columnsData.indexOf(data);
             _userTableModel.setValueAt(data, row, col);
         }
+    }
+    
+    private void removeRowUserTable(User user) {
+        int index = getRowIndexWithId(_userTableModel, user.getId());
+        _userTableModel.removeRow(index);
     }
     
     private int getRowIndexWithId(DefaultTableModel model, int id) {

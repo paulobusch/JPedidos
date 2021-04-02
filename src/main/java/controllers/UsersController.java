@@ -8,9 +8,13 @@ package controllers;
 import context.IAuthContext;
 import entities.User;
 import enums.Controller;
+import jpedidos.Settings;
+import models.ChangePasswordModel;
 import models.LoginModel;
 import repositories.IRepository;
 import repositories.IUserRepository;
+import utils.AESHash;
+import utils.RandomGenerator;
 import utils.Result;
 import utils.Validator;
 import validators.IValidator;
@@ -52,5 +56,26 @@ public class UsersController extends ControllerBase<User> {
         _authContext.setCurrentUser(user);
         
         return Result.ok();
+    }
+    
+    public String generatePassword() {
+        return RandomGenerator.generatePassword(30);
+    }
+    
+    public Result resetPassword(int userId, String password) {
+        if (userId == 0) return Result.error("O usuário deve ser informado para geração da senha");
+        _userRepository.changePassword(userId, encryptPassword(password), true);
+        return Result.ok();
+    }
+    
+    public Result changePassword(ChangePasswordModel model) {
+        Result validation = model.validate();
+        if (validation.hasError()) return validation;
+        _userRepository.changePassword(getCurrentUser().getId(), encryptPassword(model.confirmPassword), false);
+        return Result.ok();
+    }
+    
+    private String encryptPassword(String password) {
+        return AESHash.encrypt(password, Settings.SecretKey);
     }
 }

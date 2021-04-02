@@ -14,8 +14,14 @@ public class PasswordForm extends javax.swing.JFrame {
     /**
      * Creates new form PasswordForm
      */
-    public PasswordForm() {
+    private String _password;
+    
+    public PasswordForm(String password) {
         initComponents();
+        
+        _password = password;
+        txt_password.setText(password);
+        txt_password.selectAll();
     }
 
     /**
@@ -35,7 +41,7 @@ public class PasswordForm extends javax.swing.JFrame {
         pnl_actions = new javax.swing.JPanel();
         btn_close = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Senha");
 
         lbl_message.setText("<html>Foi gerada uma senha temporária, forneça esta senha para que o usuário possa fazer o acesso e definir uma nova senha</html>");
@@ -45,7 +51,11 @@ public class PasswordForm extends javax.swing.JFrame {
         lbl_password.setText("Senha: ");
 
         txt_password.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
-        txt_password.setEnabled(false);
+        txt_password.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                txt_passwordPropertyChange(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnl_mainLayout = new javax.swing.GroupLayout(pnl_main);
         pnl_main.setLayout(pnl_mainLayout);
@@ -121,40 +131,9 @@ public class PasswordForm extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_btn_closeActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PasswordForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PasswordForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PasswordForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(PasswordForm.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new PasswordForm().setVisible(true);
-            }
-        });
-    }
+    private void txt_passwordPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_txt_passwordPropertyChange
+        txt_password.setText(_password);
+    }//GEN-LAST:event_txt_passwordPropertyChange
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_close;

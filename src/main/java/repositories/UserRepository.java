@@ -200,7 +200,7 @@ public class UserRepository implements IUserRepository {
 
     @Override
     public void update(User user) {
-        String sql = "update users set name=?, login=?, password=?, email=?, role=? where id=?;";
+        String sql = "update users set name=?, login=?, email=?, role=? where id=?;";
         Connection connection = _adapter.getConnection();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql,
@@ -209,7 +209,7 @@ public class UserRepository implements IUserRepository {
             );
             
             mapParamsUpdate(preparedStatement, user);
-            preparedStatement.setInt(6, user.getId());
+            preparedStatement.setInt(5, user.getId());
             int rows = preparedStatement.executeUpdate();
             if (rows == 0) throw new JPedidosException("Nenhum usuário foi atualizado");
         } catch(SQLException ex) {
@@ -219,7 +219,7 @@ public class UserRepository implements IUserRepository {
 
     @Override
     public void delete(User user) {
-        String sql = "delete users where id=?";
+        String sql = "delete from users where id=?";
         Connection connection = _adapter.getConnection();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql,
@@ -242,6 +242,7 @@ public class UserRepository implements IUserRepository {
             user.setName(cursor.getString("name"));
             user.setEmail(cursor.getString("email"));
             user.setLogin(cursor.getString("login"));
+            user.setPasswordTemporary(cursor.getBoolean("password_temporary"));
             user.setPassword(cursor.getString("password"));
             user.setRole(cursor.getString("role"));
             return user;

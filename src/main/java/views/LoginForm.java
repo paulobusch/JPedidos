@@ -11,6 +11,7 @@ import controllers.ProductsController;
 import controllers.UsersController;
 import javax.swing.JOptionPane;
 import models.LoginModel;
+import utils.ICallback;
 import utils.Result;
 
 /**
@@ -90,9 +91,9 @@ public class LoginForm extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(29, 29, 29)
+                        .addGap(37, 37, 37)
                         .addComponent(jLabel2)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txt_login, javax.swing.GroupLayout.DEFAULT_SIZE, 229, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel3)
@@ -114,13 +115,13 @@ public class LoginForm extends javax.swing.JFrame {
                 .addGap(36, 36, 36)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel2)
-                    .addComponent(txt_login, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txt_login, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
                 .addGap(29, 29, 29)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(txt_password, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txt_password, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
                 .addGap(26, 26, 26)
                 .addComponent(btn_login, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30))
@@ -151,7 +152,16 @@ public class LoginForm extends javax.swing.JFrame {
             return;
         }
         
-        new MainForm(_authContext, _ordersController, _usersController).setVisible(true);
+        ICallback callback = new ICallback() {
+            @Override
+            public void run() {
+                new MainForm(_authContext, _ordersController, _usersController).setVisible(true);
+            }
+        };
+        if(_usersController.getCurrentUser().isPasswordTemporary()) 
+            new ChangePasswordForm(_usersController, callback).setVisible(true);
+        else 
+            callback.run();
         
         this.dispose();
     }//GEN-LAST:event_btn_loginActionPerformed
