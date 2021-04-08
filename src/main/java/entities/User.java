@@ -87,6 +87,11 @@ public class User extends EntityBase {
     }
 
     public void setRole(String role) {
+        if (role == null) {
+            this.role = null;
+            return;
+        }
+        
         switch (role) {
             case "Admin": 
                 this.role = Role.Admin;
