@@ -32,11 +32,16 @@ public class UserValidatorTests {
     @ParameterizedTest
     @CsvSource({
         "     , lucas, 321, lucas@email.com, Admin, O nome deve ser informado.",
+        "''   , lucas, 321, lucas@email.com, Admin, O nome deve ser informado.",
         "Lucas,      , 321, lucas@email.com, Admin, O login deve ser informado.",
+        "Lucas, ''   , 321, lucas@email.com, Admin, O login deve ser informado.",
         "Lucas, lucas,    , lucas@email.com, Admin, A senha deve ser informada.",
+        "Lucas, lucas, '' , lucas@email.com, Admin, A senha deve ser informada.",
         "Lucas, lucas, 321,                , Admin, O email deve ser informado.",
+        "Lucas, lucas, 321, ''             , Admin, O email deve ser informado.",
         "Lucas, lucas, 321, lucas.com      , Admin, O email deve ser válido.",
-        "Lucas, lucas, 321, lucas@email.com,      , O papel deve ser informado."
+        "Lucas, lucas, 321, lucas@email.com,      , O papel deve ser informado.",
+        "Lucas, lucas, 321, lucas@email.com, ''   , O papel deve ser informado."
     }) 
     void invalidUser(String name, String login, String password, String email, String role, String expectedError) {
         User user = new User();
