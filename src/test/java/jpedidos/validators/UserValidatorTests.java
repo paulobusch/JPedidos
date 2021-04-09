@@ -58,7 +58,7 @@ public class UserValidatorTests {
         "true, false, Já existe um usuário com este login cadastrado.",
         "false, true, Já existe um usuário com este email cadastrado."
     }) 
-    void duplcaiteUser(boolean existLogin, boolean existEmail, String expectedError) {
+    void duplicateUser(boolean existLogin, boolean existEmail, String expectedError) {
         User user = new User();
         user.setName("Lucas");
         user.setLogin("lucas");
@@ -75,5 +75,25 @@ public class UserValidatorTests {
         
         assertTrue(result.hasError());
         assertEquals(expectedError, result.getErrorMessage());
+    }
+    
+    @Test
+    void validUser() {
+        User user = new User();
+        user.setName("Lucas");
+        user.setLogin("lucas");
+        user.setPassword("321");
+        user.setEmail("lucas@email.com");
+        user.setRole(Role.Admin);
+        UserValidator validator = new UserValidator(_userRepositoryMock);
+        when(_userRepositoryMock.existByLogin(user.getLogin(), user.getId()))
+            .thenReturn(false);
+        when(_userRepositoryMock.existByEmail(user.getEmail(), user.getId()))
+            .thenReturn(false);
+        
+        Result result = validator.validate(user);
+        
+        assertFalse(result.hasError());
+        assertNull(result.getErrorMessage());
     }
 }
