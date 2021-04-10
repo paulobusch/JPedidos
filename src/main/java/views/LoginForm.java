@@ -155,7 +155,7 @@ public class LoginForm extends javax.swing.JFrame {
         ICallback callback = new ICallback() {
             @Override
             public void run() {
-                new MainForm(_authContext, _ordersController, _usersController).setVisible(true);
+                new MainForm(_authContext, _ordersController, _usersController, _productsController).setVisible(true);
             }
         };
         if(_usersController.getCurrentUser().isPasswordTemporary()) 

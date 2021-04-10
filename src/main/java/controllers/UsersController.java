@@ -58,6 +58,12 @@ public class UsersController extends ControllerBase<User> {
         return Result.ok();
     }
     
+    public Result logout() {
+        _authContext.setCurrentUser(null);
+        
+        return Result.ok();
+    }
+    
     public String generatePassword() {
         return RandomGenerator.generatePassword(30);
     }

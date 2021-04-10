@@ -7,6 +7,7 @@ package views;
 
 import context.IAuthContext;
 import controllers.OrdersController;
+import controllers.ProductsController;
 import controllers.UsersController;
 import entities.User;
 import enums.Controller;
@@ -25,17 +26,20 @@ public class MainForm extends javax.swing.JFrame {
     private IAuthContext _authContext;
     private OrdersController _ordersController;
     private UsersController _usersController;
+    private ProductsController _productsController;
     
     public MainForm(
         IAuthContext authContext,
         OrdersController ordersController,
-        UsersController usersController
+        UsersController usersController,
+        ProductsController productsController
     ) {
         initComponents();
         
         _authContext = authContext;
         _ordersController = ordersController;
         _usersController = usersController;
+        _productsController = productsController;
         updateTitle();
         toggleMenus();
     }
@@ -70,7 +74,8 @@ public class MainForm extends javax.swing.JFrame {
         mi_orders = new javax.swing.JMenuItem();
         mi_new_order = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
-        mi_exit = new javax.swing.JMenuItem();
+        mi_logout = new javax.swing.JMenuItem();
+        mi_close = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -117,14 +122,24 @@ public class MainForm extends javax.swing.JFrame {
         jMenu2.setText("Ajuda");
         jMenu2.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
 
-        mi_exit.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        mi_exit.setText("Sair");
-        mi_exit.addActionListener(new java.awt.event.ActionListener() {
+        mi_logout.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        mi_logout.setText("Sair");
+        mi_logout.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mi_exitActionPerformed(evt);
+                mi_logoutActionPerformed(evt);
             }
         });
-        jMenu2.add(mi_exit);
+        jMenu2.add(mi_logout);
+
+        mi_close.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        mi_close.setText("Fechar");
+        mi_close.setName(""); // NOI18N
+        mi_close.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mi_closeActionPerformed(evt);
+            }
+        });
+        jMenu2.add(mi_close);
 
         jMenuBar1.add(jMenu2);
 
@@ -149,9 +164,16 @@ public class MainForm extends javax.swing.JFrame {
         
     }//GEN-LAST:event_mi_ordersActionPerformed
 
-    private void mi_exitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mi_exitActionPerformed
-        System.exit(0);
-    }//GEN-LAST:event_mi_exitActionPerformed
+    private void mi_logoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mi_logoutActionPerformed
+        _usersController.logout();
+        new LoginForm(
+            _authContext,
+            _usersController, 
+            _ordersController, 
+            _productsController
+        ).setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_mi_logoutActionPerformed
 
     private void mi_new_orderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mi_new_orderActionPerformed
         new OrderForm(_ordersController).setVisible(true);
@@ -161,12 +183,17 @@ public class MainForm extends javax.swing.JFrame {
         new UserForm(_usersController).setVisible(true);
     }//GEN-LAST:event_mi_usersActionPerformed
 
+    private void mi_closeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mi_closeActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_mi_closeActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem mi_close;
     private javax.swing.JMenuItem mi_customers;
-    private javax.swing.JMenuItem mi_exit;
+    private javax.swing.JMenuItem mi_logout;
     private javax.swing.JMenuItem mi_new_order;
     private javax.swing.JMenuItem mi_orders;
     private javax.swing.JMenuItem mi_products;

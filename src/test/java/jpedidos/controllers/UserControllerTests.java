@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package jpedidos.constrollers;
+package jpedidos.controllers;
 
 import context.IAuthContext;
 import controllers.UsersController;
@@ -83,6 +83,17 @@ public class UserControllerTests {
         assertFalse(result.hasError());
         verify(_authContextMock, atLeastOnce()).setCurrentUser(userMock);
     }
+    
+    @Test
+    void logout() {
+        UsersController usersController = getUsersController();
+        
+        Result result = usersController.logout();
+        
+        assertFalse(result.hasError());
+        verify(_authContextMock, atLeastOnce()).setCurrentUser(null);
+    }
+    
     
     @Test
     void generatePassword() {

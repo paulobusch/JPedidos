@@ -88,7 +88,7 @@ public class UserValidatorTests {
         user.setName("Lucas");
         user.setLogin("lucas");
         user.setPassword("321");
-        user.setEmail("lucas@email.com");
+        user.setEmail("lucas@email.com.br");
         user.setRole(Role.Admin);
         UserValidator validator = new UserValidator(_userRepositoryMock);
         when(_userRepositoryMock.existByLogin(user.getLogin(), user.getId()))

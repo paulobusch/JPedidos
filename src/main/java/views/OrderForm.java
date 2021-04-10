@@ -185,11 +185,11 @@ public class OrderForm extends javax.swing.JFrame {
     }
     
     private void editRowOrderProductTable(OrderProduct orderProduct) {
+        int col = 0;
         ArrayList<Object> columnsData = getOrderProductColumnsData(orderProduct);
         int row = getRowIndexWithId(_orderProductTableModel, orderProduct.getId());
         for (Object data : columnsData){
-            int col = columnsData.indexOf(data);
-            _orderProductTableModel.setValueAt(data, row, col);
+            _orderProductTableModel.setValueAt(data, row, col++);
         }
     }
     
@@ -617,6 +617,7 @@ public class OrderForm extends javax.swing.JFrame {
         order.removeProduct(orderProduct);
         
         removeRowOrderProductTable(orderProduct);
+        updateTotal(_orderCurrent.computeTotal());
         clearOrderProductSelection();
     }//GEN-LAST:event_btn_trash_productActionPerformed
 

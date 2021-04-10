@@ -320,7 +320,12 @@ public class UserForm extends javax.swing.JFrame {
     private void btn_saveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_saveActionPerformed
         User user = getUser();
         boolean byInsert = user.getId() == 0;
-        if (byInsert) user.setPassword(_usersController.generatePassword());
+        String rawPassword = null;
+        if (byInsert) {
+            rawPassword = _usersController.generatePassword();
+            user.setPasswordTemporary(true);
+            user.setRawPassword(rawPassword);
+        }
         Result result = byInsert
             ? _usersController.create(user)
             : _usersController.update(user);
@@ -336,7 +341,7 @@ public class UserForm extends javax.swing.JFrame {
             editRowUserTable(user);
         }
         
-        if (byInsert) new PasswordForm(user.getPassword()).setVisible(true);
+        if (byInsert) new PasswordForm(rawPassword).setVisible(true);
         
         clearUserSelection();
     }//GEN-LAST:event_btn_saveActionPerformed
