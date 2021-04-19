@@ -24,12 +24,12 @@ import validators.UserValidator;
  *
  * @author Paulo
  */
-public class UserControllerTests {
+public class UsersControllerTests {
     private IAuthContext _authContextMock;
     private IUserRepository _userRepositoryMock;
     private UserValidator _userValidatorMock;
     
-    public UserControllerTests() {
+    public UsersControllerTests() {
         _authContextMock = mock(IAuthContext.class);
         _userRepositoryMock = mock(IUserRepository.class);
         _userValidatorMock = mock(UserValidator.class);
@@ -93,8 +93,7 @@ public class UserControllerTests {
         assertFalse(result.hasError());
         verify(_authContextMock, atLeastOnce()).setCurrentUser(null);
     }
-    
-    
+        
     @Test
     void generatePassword() {
         UsersController usersController = getUsersController();
