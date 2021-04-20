@@ -18,7 +18,7 @@ public class Validator {
     }
     
     public static boolean validatePhone(String phone) {
-        Pattern regexPattern = Pattern.compile("^\\+[0-9]{2,3}+-[0-9]{10}$");
+        Pattern regexPattern = Pattern.compile("^\\([0-9]{2}\\) 9[0-9]{4}-[0-9]{4}$");
         return regexPattern.matcher(phone).matches();
     }
 }
