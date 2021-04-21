@@ -28,7 +28,7 @@ public class ChangePasswordModelTests {
         "Pass1234, Pass1234, A senha deve ter caracteres especiais.",
         " Pass12$,  Pass12$, A senha deve ter pelo menos 8 caracteres.",
         "Pass123$,  Pass12$, As senhas deve coincindir."
-    }) 
+    })
     void invalidModel(String password, String confirmPassword, String expectedError) {
         ChangePasswordModel model = new ChangePasswordModel();
         model.newPassword = password;
