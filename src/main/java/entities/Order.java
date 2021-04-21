@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import utils.JPedidosException;
 
 /**
  *
@@ -137,13 +138,16 @@ public class Order extends EntityBase {
 
     public void removeProduct(OrderProduct orderProduct) {
         int index = indexOfOrderProductById(orderProduct.getId());
+        if (index == -1) throw new JPedidosException("O produto deve existir no pedido para ser removido!");
         orderProducts.remove(index);
     }
 
     public void updateProduct(OrderProduct orderProduct) {
         int index = indexOfOrderProductById(orderProduct.getId());
+        if (index == -1) throw new JPedidosException("O produto deve existir no pedido para ser atualizado!");
         OrderProduct oldOrderProduct = orderProducts.get(index);
         oldOrderProduct.setProductId(orderProduct.getProductId());
+        oldOrderProduct.setAmount(orderProduct.getAmount());
     }
     
     private int indexOfOrderProductById(int id) {
