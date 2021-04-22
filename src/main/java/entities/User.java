@@ -26,7 +26,7 @@ public class User extends EntityBase {
             return this.password == null;
         
         String hash = AESHash.encrypt(password, Settings.SecretKey);
-        return this.password.equals(hash);
+        return hash.equals(this.password);
     }
 
     public void setRawPassword(String password) {

@@ -71,6 +71,7 @@
               <outputDirectory>${project.reporting.outputDirectory}/jacoco</outputDirectory>
               <excludes>
                 <exclude>views/**/*</exclude>
+                <exclude>context/**/*</exclude>
                 <exclude>repositories/**/*</exclude>
                 <exclude>jpedidos/**/*</exclude>
                 <exclude>database/**/*</exclude>
