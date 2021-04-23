@@ -93,6 +93,11 @@ public class MainForm extends javax.swing.JFrame {
 
         mi_products.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         mi_products.setText("Produtos");
+        mi_products.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mi_productsActionPerformed(evt);
+            }
+        });
         jMenu1.add(mi_products);
 
         mi_customers.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
@@ -186,6 +191,10 @@ public class MainForm extends javax.swing.JFrame {
     private void mi_closeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mi_closeActionPerformed
         System.exit(0);
     }//GEN-LAST:event_mi_closeActionPerformed
+
+    private void mi_productsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mi_productsActionPerformed
+        new ProductForm(_productsController).setVisible(true);
+    }//GEN-LAST:event_mi_productsActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenu jMenu1;

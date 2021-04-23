@@ -146,7 +146,7 @@ public class UserRepository implements IUserRepository {
             
             return users;
         } catch(SQLException ex) {
-            throw new JPedidosException("Falha na execução da consulta de usuário pelo id", ex);
+            throw new JPedidosException("Falha na execução da consulta de usuários", ex);
         }
     }
 

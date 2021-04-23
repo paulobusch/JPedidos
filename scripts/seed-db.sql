@@ -2,7 +2,8 @@ use jpedidos;
 
 insert into users(name, email, login, password, role) values 
 ('Administrador', 'admin@email.com.br', 'admin', 'uIocuPh+W8WuWp0+qSmlfQ==', 'Admin'),
-('Funcionário', 'funcionario@email.com.br', 'funcionario', 'uIocuPh+W8WuWp0+qSmlfQ==', 'Funcionário');
+('Funcionário', 'funcionario@email.com.br', 'funcionario', 'uIocuPh+W8WuWp0+qSmlfQ==', 'Funcionário'),
+('Gerente', 'gerente@email.com.br', 'gerente', 'uIocuPh+W8WuWp0+qSmlfQ==', 'Gerente');
 
 -- by test
 insert into customers (name, phone) values

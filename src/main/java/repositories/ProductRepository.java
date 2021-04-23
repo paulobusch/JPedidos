@@ -70,7 +70,7 @@ public class ProductRepository implements IProductRepository {
             
             ResultSet result = preparedStatement.executeQuery();
             result.next();
-            return mapProduct(result);
+            return mapProductDetail(result);
         } catch(SQLException ex) {
             throw new JPedidosException("Falha na execução da consulta do produto pelo id", ex);
         }
@@ -78,25 +78,90 @@ public class ProductRepository implements IProductRepository {
 
     @Override
     public ArrayList<Product> getAll() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String sql = "select * from products";
+        Connection connection = _adapter.getConnection();
+        try {
+            Statement statement = connection.createStatement(
+                ResultSet.TYPE_SCROLL_SENSITIVE,
+                ResultSet.CONCUR_READ_ONLY
+            );
+            
+            ResultSet result = statement.executeQuery(sql);
+            ArrayList<Product> products = new ArrayList<Product>();
+            while(result.next())
+                products.add(mapProductList(result));
+            
+            return products;
+        } catch(SQLException ex) {
+            throw new JPedidosException("Falha na execução da consulta de produtos", ex);
+        }
     }
 
     @Override
-    public void create(Product entity) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void create(Product product) {
+        String sqlInsert = "insert into products (name, description, price) values(?, ?, ?);";
+        String sqlLastId = "select max(id) as id from products;";
+        Connection connection = _adapter.getConnection();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sqlInsert,
+                ResultSet.TYPE_SCROLL_SENSITIVE,
+                ResultSet.CONCUR_UPDATABLE
+            );
+            
+            mapParams(preparedStatement, product);
+            int rows = preparedStatement.executeUpdate();
+            if (rows == 0) throw new JPedidosException("Nenhum produto foi inserido");
+            
+            preparedStatement = connection.prepareStatement(sqlLastId,
+                ResultSet.TYPE_SCROLL_SENSITIVE,
+                ResultSet.CONCUR_READ_ONLY
+            );
+            ResultSet result = preparedStatement.executeQuery();
+            result.next();
+            product.setId(result.getInt("id"));
+        } catch(SQLException ex) {
+            throw new JPedidosException("Falha na execução do comando para inserir novo usuário", ex);
+        }
     }
 
     @Override
-    public void update(Product entity) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void update(Product product) {
+        String sql = "update products set name=?, description=?, price=? where id=?;";
+        Connection connection = _adapter.getConnection();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql,
+                ResultSet.TYPE_SCROLL_SENSITIVE,
+                ResultSet.CONCUR_UPDATABLE
+            );
+            
+            mapParams(preparedStatement, product);
+            preparedStatement.setInt(4, product.getId());
+            int rows = preparedStatement.executeUpdate();
+            if (rows == 0) throw new JPedidosException("Nenhum produto foi atualizado");
+        } catch(SQLException ex) {
+            throw new JPedidosException("Falha na execução do comando para atualizar produto", ex);
+        }
     }
 
     @Override
-    public void delete(Product entity) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void delete(Product product) {
+        String sql = "delete from products where id=?";
+        Connection connection = _adapter.getConnection();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql,
+                ResultSet.TYPE_SCROLL_SENSITIVE,
+                ResultSet.CONCUR_UPDATABLE
+            );
+            
+            preparedStatement.setInt(1, product.getId());
+            int rows = preparedStatement.executeUpdate();
+            if (rows == 0) throw new JPedidosException("Nenhum produto foi removido");
+        } catch(SQLException ex) {
+            throw new JPedidosException("Falha na execução do comando para remover produto", ex);
+        }
     }
     
-    private Product mapProduct(ResultSet cursor) {
+    private Product mapProductDetail(ResultSet cursor) {
         try {
             Product product = new Product();
             product.setId(cursor.getInt("id"));
@@ -108,112 +173,26 @@ public class ProductRepository implements IProductRepository {
             throw new JPedidosException("Falha ao mapear Product", ex);
         }
     }
-
-
-  // TODO: fix build
-  /*
-  public static ProductRepository find(int id) throws SQLException {
-        ConexaoBD connect = new ConexaoBD();
-        ProductRepository findedProductRepository = newProductRepository();
     
-     String sql = "SELECT * FROM Product_Repository WHERE id = ? limit 1";
-      
-    PreparedStatement ps = connect.conn.prepareStatement(sql);
-    ps.setInt(1, id);
-
-    ResultSet returnData = ps.executeQuery();
-    
-    
-    if (returnData.next()) {
-      findedProductRepository.id = returnData.getInt("id");
-      findedProductRepository.name = returnData.getString("name");
-      findedProductRepository.description = returnData.getString("description");
-      findedProductRepository.price = returnData.getDouble("price");
-      findedProductRepository.qtd = returnData.getInt("qtd");
-      findedProductRepository.created_at = returnData.getString("created_at");
-      findedProductRepository.updated_at = returnData.getString("updated_at");
+    private Product mapProductList(ResultSet cursor) {
+        try {
+            Product product = new Product();
+            product.setId(cursor.getInt("id"));
+            product.setName(cursor.getString("name"));
+            product.setPrice(cursor.getDouble("price"));
+            return product;
+        } catch(SQLException ex) {
+            throw new JPedidosException("Falha ao mapear Product", ex);
+        }
     }
-    return findedProductRepository;
-  }
-
-  public static List<ProductRepository> list() throws SQLException {
-    ConexaoBD connect = new ConexaoBD();
     
-    String sql = "SELECT * FROM Product_Repository";
-      
-    PreparedStatement ps = connect.conn.prepareStatement(sql);
-
-    ResultSet returnData = ps.executeQuery();
-    
-        List<ProductRepository> findedProductRepository = new ArrayList<ProductRepository>();
-             while (returnData.next()) {
-            ProductRepository findedProductRepository = new ProductRepository();
-
-      findedProductRepository.id = returnData.getInt("id");
-      findedProductRepository.name = returnData.getString("name");
-      findedProductRepository.description = returnData.getString("description");
-      findedPProductRepository.price = returnData.getDouble("price");
-      findedProductRepository.qtd = returnData.getInt("qtd");
-      findedProductRepository.created_at = returnData.getString("created_at");
-      findedProductRepository.updated_at = returnData.getString("updated_at");
-      findedProductRepository.add(findedProduct);
+    private void mapParams(PreparedStatement preparedStatement, Product product) {
+        try {
+            preparedStatement.setString(1, product.getName());
+            preparedStatement.setString(2, product.getDescription());
+            preparedStatement.setDouble(3, product.getPrice());
+        } catch(SQLException ex) {
+            throw new JPedidosException("Falha ao mapear Params", ex);
+        }
     }
-    return findedProductRepository;
-  }
-
-  public static void create(ProductRepository ProductRepositoryToCreate) throws SQLException {
-   ConexaoBD connect = new ConexaoBD();
-   
-   CurrentDateInString currentDateInString = new CurrentDateInString();
-   
-   String sql = "INSERT INTO Product_Repository (name, description, price, qtd, created_at) values (?,?,?,?,?)";
-     
-   PreparedStatement ps = connect.conn.prepareStatement(sql);
-   ps.setString(1, ProductRepositoryToCreate.name);
-   ps.setString(2, ProductRepositoryToCreate.description);
-   ps.setDouble(3, ProductRepositoryToCreate.price);
-   ps.setInt(4, ProductRepositoryToCreate.qtd);
-   ps.setString(5, currentDateInString.execute());
-
-   ps.executeUpdate();
-
-  }
-
-  public static void update(ProductRepository ProductRepositoryToUpdate) throws SQLException {
-   ConexaoBD connect = new ConexaoBD();
-   
-   CurrentDateInString currentDateInString = new CurrentDateInString();
-   
-   String sql = "UPDATE Product_Repository SET name=?, description=?, price=?, qtd=?, updated_at=? WHERE id=?";
-     
-   PreparedStatement ps = connect.conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-   ps.setString(1, ProductRepositoryToUpdate.name);
-   ps.setString(2, ProductRepositoryToUpdate.description);
-   ps.setDouble(3, ProductRepositoryToUpdate.price);
-   ps.setInt(4, ProductRepositoryToUpdate.qtd);
-   ps.setString(5, currentDateInString.execute());
-   ps.setInt(6, ProductRepositoryToUpdate.id);
-
-   ps.executeUpdate();
-
-   ResultSet returnData = ps.getGeneratedKeys();
-   
-   if (returnData.next()) {
-     System.out.println(returnData.getInt(1));
-   }
-  }
-
-  public void delete(ProductRepository ProductRepositoryToDelete) throws SQLException {
-    ConexaoBD connect = new ConexaoBD();
-    
-    String sql = "DELETE FROM Product_Repository WHERE id = ?";
-     
-    PreparedStatement ps = connect.conn.prepareStatement(sql);
-    ps.setInt(1, ProductRepositoryToDelete.id);
-  
-    ps.executeUpdate();
-  }
-  */
-    
-
 }

@@ -5,6 +5,8 @@
  */
 package entities;
 
+import java.util.regex.Pattern;
+
 /**
  *
  * @author Paulo
@@ -37,6 +39,10 @@ public class Product extends EntityBase {
     public void setPrice(double price) {
         this.price = price;
     }
-    
-    
+
+    public void setPrice(String price) {
+        this.price = Pattern.matches("\\d+", price)
+            ? Integer.parseInt(price)
+            : 0;
+    }
 }

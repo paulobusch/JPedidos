@@ -6,6 +6,18 @@
 package views;
 
 import controllers.ProductsController;
+import entities.Product;
+import entities.User;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
+import models.SelectRole;
+import utils.Result;
+import utils.ResultData;
 
 /**
  *
@@ -16,11 +28,118 @@ public class ProductForm extends javax.swing.JFrame {
     /**
      * Creates new form ProductForm
      */
-    private ProductsController _productController;
+    private ProductsController _productsController;
+
+    private Product _productCurrent;
+    private DefaultTableModel _productTableModel;
     
-    public ProductForm(ProductsController productController) {
+    public ProductForm(ProductsController productsController) {
         initComponents();
-        _productController = productController;
+        _productsController = productsController;
+        
+        updateTitle();  
+    }
+    
+    private void updateTitle() {
+        User currentUser = _productsController.getCurrentUser();
+        setTitle("JPedidos - Gerenciar Produtos (" + currentUser.getRoleString() + ")");
+    }
+    
+    private Product getProduct() {
+        Product product = _productCurrent != null
+            ? _productCurrent
+            : new Product();
+        
+        product.setName(txt_name.getText());
+        product.setDescription(txt_description.getText());
+        product.setPrice(txt_price.getText());
+        
+        return product;
+    }
+    
+    private void setProduct(Product product) {
+        _productCurrent = product;
+        
+        txt_name.setText(product.getName());
+        txt_description.setText(product.getDescription());
+        txt_price.setText(String.valueOf(product.getPrice()));
+    }
+    
+    private void productTableEvents() {
+        ListSelectionModel model = tbl_list.getSelectionModel();
+        model.addListSelectionListener(new ListSelectionListener(){
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                int row = tbl_list.getSelectedRow();
+                if (row == -1) {
+                    setProduct(new Product());
+                    return;
+                }
+                int id = getTableIdByIndex(_productTableModel, row);
+                ResultData<Product> result = _productsController.getById(id);
+                if (result.hasError()){
+                    displayResult(Result.error(result.getErrorMessage()));
+                    return;
+                }
+                btn_trash.setEnabled(true);
+                setProduct(result.getData());
+            }
+        });
+    }
+    
+    private int getTableIdByIndex(DefaultTableModel model, int index) {
+        Object raw = model.getValueAt(index, 0);
+        return Integer.parseInt(raw.toString());
+    }
+    
+    private ArrayList<Object> getProductColumnsData(Product product) {
+        ArrayList<Object> columns = new ArrayList<>();
+        columns.add(product.getId());
+        columns.add(product.getName());
+        columns.add(product.getPrice());
+        return columns;
+    }
+    
+    private void addRowProductTable(Product product) {
+        ArrayList<Object> columnsData = getProductColumnsData(product);
+        _productTableModel.addRow(columnsData.toArray());
+    }
+    
+    private void editRowProductTable(Product product) {
+        ArrayList<Object> columnsData = getProductColumnsData(product);
+        int row = getRowIndexWithId(_productTableModel, product.getId());
+        for (Object data : columnsData){
+            int col = columnsData.indexOf(data);
+            _productTableModel.setValueAt(data, row, col);
+        }
+    }
+    
+    private void removeRowUserTable(User user) {
+        int index = getRowIndexWithId(_productTableModel, user.getId());
+        _productTableModel.removeRow(index);
+    }
+    
+    private void displayResult(Result result) {
+        JOptionPane.showMessageDialog(this, result.getErrorMessage(), "Informação", JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+    private void clearProductTable() {
+        _productTableModel.setRowCount(0);
+    }
+    
+    private void clearProductSelection() {
+        btn_trash.setEnabled(false);
+        tbl_list.clearSelection();
+        setProduct(new Product());  
+    }
+    
+    private int getRowIndexWithId(DefaultTableModel model, int id) {
+        for (int row = 0; row < model.getRowCount(); row++){
+            Object raw = model.getValueAt(row, 0);
+            int rowId = Integer.parseInt(raw.toString());
+            if (rowId == id) return row;
+        }
+        return -1;
     }
 
     /**
@@ -62,8 +181,13 @@ public class ProductForm extends javax.swing.JFrame {
         ));
         jScrollPane2.setViewportView(jTable1);
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("JPedidos - Produtos");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         lbl_name.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         lbl_name.setText("Nome:");
@@ -98,28 +222,27 @@ public class ProductForm extends javax.swing.JFrame {
                 .addGroup(pnl_fieldsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(pnl_fieldsLayout.createSequentialGroup()
                         .addComponent(txt_name, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(45, 45, 45)
+                        .addGap(61, 61, 61)
                         .addComponent(lbl_price)
                         .addGap(18, 18, 18)
-                        .addComponent(txt_price, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(txt_scroll))
+                        .addComponent(txt_price))
+                    .addComponent(txt_scroll, javax.swing.GroupLayout.PREFERRED_SIZE, 517, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnl_fieldsLayout.setVerticalGroup(
             pnl_fieldsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnl_fieldsLayout.createSequentialGroup()
                 .addGap(25, 25, 25)
-                .addGroup(pnl_fieldsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(pnl_fieldsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(lbl_price)
-                        .addComponent(txt_price, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(txt_name, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_name))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                .addGroup(pnl_fieldsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbl_price)
+                    .addComponent(txt_price, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_name)
+                    .addComponent(txt_name, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
                 .addGroup(pnl_fieldsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lbl_description)
                     .addComponent(txt_scroll, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(17, 17, 17))
+                .addGap(76, 76, 76))
         );
 
         btn_clear.setIcon(new javax.swing.ImageIcon("C:\\Users\\Paulo\\Desktop\\Cursos\\UTFPR\\7º Semestre\\Oficina de Integração 2\\JPedidos\\src\\main\\java\\assets\\clean-48.png")); // NOI18N
@@ -206,6 +329,7 @@ public class ProductForm extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_saveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_saveActionPerformed
@@ -216,6 +340,24 @@ public class ProductForm extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btn_trashActionPerformed
 
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        _productTableModel = (DefaultTableModel)tbl_list.getModel();                       
+        
+        productTableEvents();
+        clearProductTable();
+        clearProductSelection();
+        
+        ResultData<ArrayList<Product>> result = _productsController.getAll();
+        if (result.hasError()){
+            displayResult(Result.error(result.getErrorMessage()));
+            return;
+        }
+        
+        for (Product product : result.getData()) {
+            addRowProductTable(product);
+        }
+    }//GEN-LAST:event_formWindowOpened
+     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_clear;
     private javax.swing.JButton btn_save;
