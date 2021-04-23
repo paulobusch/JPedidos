@@ -11,6 +11,7 @@ import entities.Product;
 import enums.Controller;
 import repositories.IProductRepository;
 import repositories.IUserRepository;
+import utils.Result;
 import validators.ProductValidator;
 import validators.UserValidator;
 
@@ -33,5 +34,14 @@ public class ProductsController extends ControllerBase<Product> {
         _productRepository = productRepository;
         _productValidator = productValidator;
         _authContext = authContext;
+    }
+    
+    public boolean hasOrders(int id) {
+        return _productRepository.hasOrders(id);
+    }
+    
+    public Result changeActive(int id, boolean active) {
+        _productRepository.changeActive(id, active);
+        return Result.ok();
     }
 }

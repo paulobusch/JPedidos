@@ -288,7 +288,7 @@ public class OrderForm extends javax.swing.JFrame {
         lbl_name3 = new javax.swing.JLabel();
         txt_product_amount = new javax.swing.JFormattedTextField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
@@ -610,7 +610,7 @@ public class OrderForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_clear_productActionPerformed
 
     private void btn_trash_productActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_trash_productActionPerformed
-        int option = JOptionPane.showConfirmDialog(this, "Deseja excluir o produto do pedido?", "Excluir", JOptionPane.OK_CANCEL_OPTION);
+        int option = JOptionPane.showConfirmDialog(this, "Deseja excluir o produto do pedido?", "Excluir", JOptionPane.YES_NO_OPTION);
         if(option != JOptionPane.OK_OPTION) return;
         Order order = getOrder();
         OrderProduct orderProduct = getOrderProduct();

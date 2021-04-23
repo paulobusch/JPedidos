@@ -52,6 +52,7 @@ public class ProductForm extends javax.swing.JFrame {
         
         product.setName(txt_name.getText());
         product.setDescription(txt_description.getText());
+        product.setActive(chk_active.isSelected());
         product.setPrice(txt_price.getText().replace(',', '.'));
         
         return product;
@@ -63,6 +64,7 @@ public class ProductForm extends javax.swing.JFrame {
         txt_name.setText(product.getName());
         txt_description.setText(product.getDescription());
         txt_price.setText(String.format("%.2f", product.getPrice()).replace('.', ','));
+        chk_active.setSelected(product.isActive());
     }
     
     private void productTableEvents() {
@@ -97,6 +99,7 @@ public class ProductForm extends javax.swing.JFrame {
         columns.add(product.getId());
         columns.add(product.getName());
         columns.add(String.format("%.2f", product.getPrice()).replace('.', ','));
+        columns.add(product.isActive() ? "Ativo" : "Inativo");
         return columns;
     }
     
@@ -161,6 +164,7 @@ public class ProductForm extends javax.swing.JFrame {
         lbl_description = new javax.swing.JLabel();
         txt_scroll = new javax.swing.JScrollPane();
         txt_description = new javax.swing.JTextArea();
+        chk_active = new javax.swing.JCheckBox();
         pnl_actions = new javax.swing.JPanel();
         btn_clear = new javax.swing.JButton();
         btn_save = new javax.swing.JButton();
@@ -210,6 +214,9 @@ public class ProductForm extends javax.swing.JFrame {
         txt_description.setName("txt_description"); // NOI18N
         txt_scroll.setViewportView(txt_description);
 
+        chk_active.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        chk_active.setText("Ativo");
+
         javax.swing.GroupLayout pnl_fieldsLayout = new javax.swing.GroupLayout(pnl_fields);
         pnl_fields.setLayout(pnl_fieldsLayout);
         pnl_fieldsLayout.setHorizontalGroup(
@@ -220,31 +227,34 @@ public class ProductForm extends javax.swing.JFrame {
                     .addComponent(lbl_description)
                     .addComponent(lbl_name))
                 .addGap(18, 18, 18)
-                .addGroup(pnl_fieldsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(pnl_fieldsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(pnl_fieldsLayout.createSequentialGroup()
-                        .addComponent(txt_name, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(61, 61, 61)
+                        .addComponent(txt_name, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(lbl_price)
                         .addGap(18, 18, 18)
-                        .addComponent(txt_price))
-                    .addComponent(txt_scroll, javax.swing.GroupLayout.PREFERRED_SIZE, 517, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txt_price, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(29, 29, 29)
+                        .addComponent(chk_active))
+                    .addComponent(txt_scroll, javax.swing.GroupLayout.DEFAULT_SIZE, 517, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnl_fieldsLayout.setVerticalGroup(
             pnl_fieldsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnl_fieldsLayout.createSequentialGroup()
-                .addGap(25, 25, 25)
+                .addGap(24, 24, 24)
                 .addGroup(pnl_fieldsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txt_name, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_name)
                     .addGroup(pnl_fieldsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(lbl_price)
                         .addComponent(txt_price, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lbl_name)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
+                        .addComponent(lbl_price)
+                        .addComponent(chk_active)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
                 .addGroup(pnl_fieldsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lbl_description)
                     .addComponent(txt_scroll, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(76, 76, 76))
+                .addGap(20, 20, 20))
         );
 
         btn_clear.setIcon(new javax.swing.ImageIcon("C:\\Users\\Paulo\\Desktop\\Cursos\\UTFPR\\7º Semestre\\Oficina de Integração 2\\JPedidos\\src\\main\\java\\assets\\clean-48.png")); // NOI18N
@@ -297,17 +307,14 @@ public class ProductForm extends javax.swing.JFrame {
 
         tbl_list.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+
             },
             new String [] {
-                "ID", "Nome", "Preço"
+                "ID", "Nome", "Preço", "Status"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.String.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -361,9 +368,21 @@ public class ProductForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_saveActionPerformed
 
     private void btn_trashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_trashActionPerformed
-        int option = JOptionPane.showConfirmDialog(this, "Deseja excluir o produto?", "Excluir", JOptionPane.OK_CANCEL_OPTION);
+        int option = JOptionPane.showConfirmDialog(this, "Deseja excluir o produto?", "Excluir", JOptionPane.YES_NO_OPTION);
         if(option != JOptionPane.OK_OPTION) return;
         Product product = getProduct();
+        if (_productsController.hasOrders(product.getId())) {
+            String message = "O produto possui pedidos vinculados, "
+                + "deseja desativar o produto em vez de remover?";
+            option = JOptionPane.showConfirmDialog(this, message, "Excluir", JOptionPane.YES_NO_OPTION);
+            if(option != JOptionPane.OK_OPTION) return;
+            product.setActive(false);
+            _productsController.changeActive(product.getId(), false);
+            editRowProductTable(product);
+            clearProductSelection();
+            return;
+        }
+        
         Result result = _productsController.delete(product.getId());
         if (result.hasError()) {
             displayResult(result);
@@ -400,6 +419,7 @@ public class ProductForm extends javax.swing.JFrame {
     private javax.swing.JButton btn_clear;
     private javax.swing.JButton btn_save;
     private javax.swing.JButton btn_trash;
+    private javax.swing.JCheckBox chk_active;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
     private javax.swing.JLabel lbl_description;

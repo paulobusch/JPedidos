@@ -14,8 +14,13 @@ import java.util.regex.Pattern;
 public class Product extends EntityBase {
     private String name;
     private String description;
+    private boolean active;
     private double price;
 
+    public Product() {
+        active = true;
+    }
+    
     public String getName() {
         return name;
     }
@@ -45,4 +50,13 @@ public class Product extends EntityBase {
             ? Double.parseDouble(price)
             : 0;
     }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+    
 }

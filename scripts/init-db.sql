@@ -47,6 +47,7 @@ create table products (
   name varchar(40) not null,
   description varchar(250) not null,
   price decimal(10, 2) not null,
+  active bit(1) not null default 1,
   
   primary key(id),
 

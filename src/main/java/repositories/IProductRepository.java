@@ -16,4 +16,6 @@ import models.SelectOption;
  */
 public interface IProductRepository extends IRepository<Product> {
     ArrayList<SelectOption> getAllFlat();
+    boolean hasOrders(int id);
+    void changeActive(int id, boolean active);
 }

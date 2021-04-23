@@ -369,7 +369,7 @@ public class UserForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_clearActionPerformed
 
     private void btn_trashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_trashActionPerformed
-        int option = JOptionPane.showConfirmDialog(this, "Deseja excluir o usuário?", "Excluir", JOptionPane.OK_CANCEL_OPTION);
+        int option = JOptionPane.showConfirmDialog(this, "Deseja excluir o usuário?", "Excluir", JOptionPane.YES_NO_OPTION);
         if(option != JOptionPane.OK_OPTION) return;
         User user = getUser();
         Result result = _usersController.delete(user.getId());
@@ -383,7 +383,7 @@ public class UserForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_trashActionPerformed
 
     private void btn_change_keyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_change_keyActionPerformed
-        int option = JOptionPane.showConfirmDialog(this, "Deseja gerar uma nova senha para o usuário?", "Excluir", JOptionPane.OK_CANCEL_OPTION);
+        int option = JOptionPane.showConfirmDialog(this, "Deseja gerar uma nova senha para o usuário?", "Excluir", JOptionPane.YES_NO_OPTION);
         if(option != JOptionPane.OK_OPTION) return;
         User user = getUser();
         String randomPassword = _usersController.generatePassword();
