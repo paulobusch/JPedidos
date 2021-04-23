@@ -41,8 +41,8 @@ public class Product extends EntityBase {
     }
 
     public void setPrice(String price) {
-        this.price = Pattern.matches("\\d+", price)
-            ? Integer.parseInt(price)
+        this.price = Pattern.matches("^\\d+\\.?\\d+$", price)
+            ? Double.parseDouble(price)
             : 0;
     }
 }

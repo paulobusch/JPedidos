@@ -52,7 +52,7 @@ public class ProductForm extends javax.swing.JFrame {
         
         product.setName(txt_name.getText());
         product.setDescription(txt_description.getText());
-        product.setPrice(txt_price.getText());
+        product.setPrice(txt_price.getText().replace(',', '.'));
         
         return product;
     }
@@ -62,7 +62,7 @@ public class ProductForm extends javax.swing.JFrame {
         
         txt_name.setText(product.getName());
         txt_description.setText(product.getDescription());
-        txt_price.setText(String.valueOf(product.getPrice()));
+        txt_price.setText(String.format("%.2f", product.getPrice()).replace('.', ','));
     }
     
     private void productTableEvents() {
@@ -96,7 +96,7 @@ public class ProductForm extends javax.swing.JFrame {
         ArrayList<Object> columns = new ArrayList<>();
         columns.add(product.getId());
         columns.add(product.getName());
-        columns.add(product.getPrice());
+        columns.add(String.format("%.2f", product.getPrice()).replace('.', ','));
         return columns;
     }
     
@@ -114,8 +114,8 @@ public class ProductForm extends javax.swing.JFrame {
         }
     }
     
-    private void removeRowUserTable(User user) {
-        int index = getRowIndexWithId(_productTableModel, user.getId());
+    private void removeRowProductTable(Product product) {
+        int index = getRowIndexWithId(_productTableModel, product.getId());
         _productTableModel.removeRow(index);
     }
     
@@ -205,6 +205,7 @@ public class ProductForm extends javax.swing.JFrame {
         lbl_description.setText("Descrição:");
 
         txt_description.setColumns(20);
+        txt_description.setFont(new java.awt.Font("Dialog", 0, 14)); // NOI18N
         txt_description.setRows(5);
         txt_description.setName("txt_description"); // NOI18N
         txt_scroll.setViewportView(txt_description);
@@ -233,11 +234,12 @@ public class ProductForm extends javax.swing.JFrame {
             pnl_fieldsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnl_fieldsLayout.createSequentialGroup()
                 .addGap(25, 25, 25)
-                .addGroup(pnl_fieldsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lbl_price)
-                    .addComponent(txt_price, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_name)
-                    .addComponent(txt_name, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(pnl_fieldsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txt_name, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(pnl_fieldsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(lbl_price)
+                        .addComponent(txt_price, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lbl_name)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
                 .addGroup(pnl_fieldsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lbl_description)
@@ -247,6 +249,11 @@ public class ProductForm extends javax.swing.JFrame {
 
         btn_clear.setIcon(new javax.swing.ImageIcon("C:\\Users\\Paulo\\Desktop\\Cursos\\UTFPR\\7º Semestre\\Oficina de Integração 2\\JPedidos\\src\\main\\java\\assets\\clean-48.png")); // NOI18N
         btn_clear.setName("btn_clear"); // NOI18N
+        btn_clear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_clearActionPerformed(evt);
+            }
+        });
 
         btn_save.setIcon(new javax.swing.ImageIcon("C:\\Users\\Paulo\\Desktop\\Cursos\\UTFPR\\7º Semestre\\Oficina de Integração 2\\JPedidos\\src\\main\\java\\assets\\save-all-48.png")); // NOI18N
         btn_save.setName("btn_add"); // NOI18N
@@ -300,7 +307,7 @@ public class ProductForm extends javax.swing.JFrame {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Integer.class, java.lang.String.class, java.lang.Float.class
+                java.lang.Integer.class, java.lang.String.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -333,11 +340,38 @@ public class ProductForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_saveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_saveActionPerformed
-        // TODO add your handling code here:
+        Product product = getProduct();
+        boolean byInsert = product.getId() == 0;
+        Result result = byInsert
+            ? _productsController.create(product)
+            : _productsController.update(product);
+                
+        if (result.hasError()){
+            displayResult(result);
+            return;
+        }
+        
+        if (byInsert) {
+            addRowProductTable(product);
+        } else {
+            editRowProductTable(product);
+        }
+        
+        clearProductSelection();
     }//GEN-LAST:event_btn_saveActionPerformed
 
     private void btn_trashActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_trashActionPerformed
-        // TODO add your handling code here:
+        int option = JOptionPane.showConfirmDialog(this, "Deseja excluir o produto?", "Excluir", JOptionPane.OK_CANCEL_OPTION);
+        if(option != JOptionPane.OK_OPTION) return;
+        Product product = getProduct();
+        Result result = _productsController.delete(product.getId());
+        if (result.hasError()) {
+            displayResult(result);
+            return;        
+        }
+        
+        removeRowProductTable(product);
+        clearProductSelection();
     }//GEN-LAST:event_btn_trashActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
@@ -357,6 +391,10 @@ public class ProductForm extends javax.swing.JFrame {
             addRowProductTable(product);
         }
     }//GEN-LAST:event_formWindowOpened
+
+    private void btn_clearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_clearActionPerformed
+        clearProductSelection();
+    }//GEN-LAST:event_btn_clearActionPerformed
      
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_clear;
