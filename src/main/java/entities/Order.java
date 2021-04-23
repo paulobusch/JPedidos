@@ -168,4 +168,9 @@ public class Order extends EntityBase {
         
         return total;
     }
+    
+    public void closeOrder() {
+        this.status = OrderStatus.Close;
+        this.closeDate = new Date();
+    }
 }

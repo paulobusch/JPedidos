@@ -39,11 +39,16 @@ public class PermissionsByRole {
                 CrudFunctionality.Update,
                 CrudFunctionality.Delete
             )),
-            new ControllerFunctionalities(Controller.Orders, asList(CrudFunctionality.List))
+            new ControllerFunctionalities(Controller.Orders, asList(
+                CrudFunctionality.Read,
+                CrudFunctionality.List,
+                CrudFunctionality.Update
+            ))
         ));
         
         roleFuncionalities.put(Role.Funcionario, asList(
             new ControllerFunctionalities(Controller.Orders, asList(
+                CrudFunctionality.Read,
                 CrudFunctionality.List,
                 CrudFunctionality.Create,
                 CrudFunctionality.Update

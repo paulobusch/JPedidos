@@ -166,7 +166,7 @@ public class MainForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void mi_ordersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mi_ordersActionPerformed
-        
+        new OrderList(_ordersController).setVisible(true);
     }//GEN-LAST:event_mi_ordersActionPerformed
 
     private void mi_logoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mi_logoutActionPerformed
