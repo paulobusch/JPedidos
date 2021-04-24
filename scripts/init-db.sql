@@ -23,7 +23,7 @@ create table users (
 create table customers (
   id int not null auto_increment,
   name varchar(75) not null,
-  phone varchar(14) not null,
+  phone varchar(15) not null,
 
   primary key(id)
 );

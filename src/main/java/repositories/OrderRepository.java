@@ -58,7 +58,9 @@ public class OrderRepository implements IOrderRepository {
 
     @Override
     public Order getById(int id) {
-        String sql = "select id, customer_id from orders where id=?;";
+        String sql = "select o.id, c.id as customer_id, c.name as customer_name, c.phone as customer_phone, o.open_date, o.close_date from orders o\n" +
+            "join customers c on c.id=o.customer_id\n" +
+            "where o.id=?;";
         String sqlOrderProduct = "select op.id, op.product_id, p.name as product_name, op.amount from orders_products op " +
             "join products p on p.id=op.product_id "+
             "where op.order_id=?;";
@@ -96,7 +98,7 @@ public class OrderRepository implements IOrderRepository {
 
     @Override
     public ArrayList<Order> getAll() {
-        String sql = "select o.id, o.customer_id, c.name as customer_name, sum(p.price * op.amount) as total_price, o.open_date, o.close_date, o.status from orders o\n" +
+        String sql = "select o.id, o.customer_id, c.name as customer_name, c.phone as customer_phone, sum(p.price * op.amount) as total_price, o.open_date, o.close_date, o.status from orders o\n" +
             "join customers c on c.id=o.customer_id\n" +
             "join orders_products op on op.order_id=o.id\n" +
             "join products p on p.id=op.product_id\n" +
@@ -361,9 +363,25 @@ public class OrderRepository implements IOrderRepository {
     
     private Order mapOrder(ResultSet cursor) {
         try {
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Customer customer = new Customer();
+            customer.setId(cursor.getInt("customer_id"));
+            customer.setName(cursor.getString("customer_name"));
+            customer.setPhone(cursor.getString("customer_phone"));
+            
             Order order = new Order();
             order.setId(cursor.getInt("id"));
+            order.setCustomer(customer);
             order.setCustomerId(cursor.getInt("customer_id"));
+            
+            try {
+                String closeDate = cursor.getString("close_date");
+                order.setOpenDate(df.parse(cursor.getString("open_date")));
+                order.setCloseDate(closeDate == null || closeDate.equals("") ? null : df.parse(closeDate));
+            } catch (ParseException ex) {
+                throw new JPedidosException("Falha ao converter data do pedido", ex);
+            } 
+            
             return order;
         } catch(SQLException ex) {
             throw new JPedidosException("Falha ao mapear Order", ex);
@@ -376,6 +394,7 @@ public class OrderRepository implements IOrderRepository {
             Customer customer = new Customer();
             customer.setId(cursor.getInt("customer_id"));
             customer.setName(cursor.getString("customer_name"));
+            customer.setPhone(cursor.getString("customer_phone"));
             
             Order order = new Order();
             order.setId(cursor.getInt("id"));

@@ -7,8 +7,8 @@ insert into users(name, email, login, password, role) values
 
 -- by test
 insert into customers (name, phone) values
-('Paulo', '41896542531'),
-('Otávio', '41896548562');
+('Paulo', '(41) 99587-6478'),
+('Otávio', '(41) 92145-3215');
 
 insert into products (name, description, price) values
 ('Teclado', 'Teclado DELL', 50),
