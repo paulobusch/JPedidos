@@ -10,6 +10,7 @@ import entities.Order;
 import entities.Product;
 import entities.User;
 import enums.OrderStatus;
+import enums.Role;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
@@ -38,7 +39,9 @@ public class OrderList extends javax.swing.JFrame {
         initComponents();
         _ordersController = ordersController;
 
-        updateTitle(); 
+        User currentUser = _ordersController.getCurrentUser();
+        updateTitle();
+        toggleFieldsByRole(currentUser.getRole());
     }
     
     private void updateTitle() {
@@ -46,8 +49,15 @@ public class OrderList extends javax.swing.JFrame {
         setTitle("JPedidos - Gerenciar Pedidos (" + currentUser.getRoleString() + ")");
     }
     
+    private void toggleFieldsByRole(Role role) {
+       if (role != Role.Funcionario) {
+           pnl_actions.setVisible(false);
+       } 
+    }
+    
     private void setOrderOpened(Order order) {
         _orderOpenedCurrent = order;
+        btn_close_order.setEnabled(order != null);
     }
     
     private void displayResult(Result result) {
@@ -129,6 +139,10 @@ public class OrderList extends javax.swing.JFrame {
     private void initComponents() {
 
         tab_order_opened = new javax.swing.JTabbedPane();
+        jPanel1 = new javax.swing.JPanel();
+        pnl_actions = new javax.swing.JPanel();
+        btn_close_order = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
         scroll = new javax.swing.JScrollPane();
         tbl_list_opened = new javax.swing.JTable();
 
@@ -138,6 +152,34 @@ public class OrderList extends javax.swing.JFrame {
                 formWindowOpened(evt);
             }
         });
+
+        btn_close_order.setIcon(new javax.swing.ImageIcon("C:\\Users\\Paulo\\Desktop\\Cursos\\UTFPR\\7º Semestre\\Oficina de Integração 2\\JPedidos\\src\\main\\java\\assets\\close-48.png")); // NOI18N
+        btn_close_order.setEnabled(false);
+        btn_close_order.setName("btn_add"); // NOI18N
+        btn_close_order.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_close_orderActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout pnl_actionsLayout = new javax.swing.GroupLayout(pnl_actions);
+        pnl_actions.setLayout(pnl_actionsLayout);
+        pnl_actionsLayout.setHorizontalGroup(
+            pnl_actionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnl_actionsLayout.createSequentialGroup()
+                .addContainerGap(893, Short.MAX_VALUE)
+                .addComponent(btn_close_order, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(35, 35, 35))
+        );
+        pnl_actionsLayout.setVerticalGroup(
+            pnl_actionsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnl_actionsLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btn_close_order, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jPanel1.add(pnl_actions);
 
         tbl_list_opened.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -157,17 +199,32 @@ public class OrderList extends javax.swing.JFrame {
         });
         scroll.setViewportView(tbl_list_opened);
 
-        tab_order_opened.addTab("Pedidos Abertos", scroll);
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(scroll, javax.swing.GroupLayout.DEFAULT_SIZE, 952, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(scroll, javax.swing.GroupLayout.PREFERRED_SIZE, 360, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 73, Short.MAX_VALUE))
+        );
+
+        jPanel1.add(jPanel2);
+
+        tab_order_opened.addTab("Pedidos Abertos", jPanel1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tab_order_opened, javax.swing.GroupLayout.DEFAULT_SIZE, 1009, Short.MAX_VALUE)
+            .addComponent(tab_order_opened, javax.swing.GroupLayout.DEFAULT_SIZE, 954, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tab_order_opened, javax.swing.GroupLayout.DEFAULT_SIZE, 395, Short.MAX_VALUE)
+            .addComponent(tab_order_opened, javax.swing.GroupLayout.DEFAULT_SIZE, 457, Short.MAX_VALUE)
         );
 
         pack();
@@ -193,7 +250,25 @@ public class OrderList extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_formWindowOpened
 
+    private void btn_close_orderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_close_orderActionPerformed
+        int option = JOptionPane.showConfirmDialog(this, "Deseja excluir o produto?", "Excluir", JOptionPane.YES_NO_OPTION);
+        if(option != JOptionPane.OK_OPTION) return;
+        _orderOpenedCurrent.closeOrder();
+        Result result = _ordersController.update(_orderOpenedCurrent);
+        if (result.hasError()) {
+            displayResult(result);
+            return;
+        }
+
+        removeRowOrderOpenedTable(_orderOpenedCurrent);
+        clearOrderOpenedSelection();
+    }//GEN-LAST:event_btn_close_orderActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_close_order;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel pnl_actions;
     private javax.swing.JScrollPane scroll;
     private javax.swing.JTabbedPane tab_order_opened;
     private javax.swing.JTable tbl_list_opened;

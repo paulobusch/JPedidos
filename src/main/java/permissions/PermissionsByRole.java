@@ -41,8 +41,7 @@ public class PermissionsByRole {
             )),
             new ControllerFunctionalities(Controller.Orders, asList(
                 CrudFunctionality.Read,
-                CrudFunctionality.List,
-                CrudFunctionality.Update
+                CrudFunctionality.List
             ))
         ));
         
