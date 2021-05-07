@@ -58,9 +58,12 @@ public class OrderRepository implements IOrderRepository {
 
     @Override
     public Order getById(int id) {
-        String sql = "select o.id, c.id as customer_id, c.name as customer_name, c.phone as customer_phone, o.open_date, o.close_date from orders o\n" +
+        String sql = "select o.id, c.id as customer_id, c.name as customer_name, c.phone as customer_phone, sum(p.price * op.amount) as total_price, o.open_date, o.close_date from orders o\n" +
             "join customers c on c.id=o.customer_id\n" +
-            "where o.id=?;";
+            "join orders_products op on op.order_id=o.id\n" +
+            "join products p on p.id=op.product_id\n" +
+            "where o.id=?\n" + 
+            "group by o.id;";
         String sqlOrderProduct = "select op.id, op.product_id, p.name as product_name, op.amount from orders_products op " +
             "join products p on p.id=op.product_id "+
             "where op.order_id=?;";
@@ -373,6 +376,7 @@ public class OrderRepository implements IOrderRepository {
             order.setId(cursor.getInt("id"));
             order.setCustomer(customer);
             order.setCustomerId(cursor.getInt("customer_id"));
+            order.setTotal(cursor.getDouble("total_price"));
             
             try {
                 String closeDate = cursor.getString("close_date");
