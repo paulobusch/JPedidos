@@ -43,6 +43,22 @@ Como um gerente e funcionário, eu quero listar os pedidos (abertos e fechados) 
 
 Como um funcionário, eu quero fechar um pedido para registrar que o pedido foi entregue ao cliente.
 
+- E7 - Gerar relatório de pedidos
+
+Como um gerente, eu quero gerar um relatório de vendas por um período selecionado para acompanhar como é o status atual do negócio.
+
+- E8 - Gerenciar clientes
+
+Como um funcionário, eu quero listar, inserir e atualizar dados de clientes. 
+
+- E9 - Criar pedido pré-definido (pacote)
+
+Como um gerente, eu quero adicionar um pedido pré-definido para oferecer preços promocionais para os clientes.
+
+- E10 - fazer pedido de pacote
+
+Como um funcionário, eu quero registrar um pedido pré-definido para passar a equipe, informar o valor total e atender ao cliente.
+
 ## Regras de negócio
 
 - Usuário: possui nome completo, login, senha, e-mail e é de um único tipo (ver tipos de usuários). 
@@ -50,6 +66,10 @@ Como um funcionário, eu quero fechar um pedido para registrar que o pedido foi 
 - Produto: possui nome curto, descrição e preço unitário. 
 
 - Pedido: possui o nome e telefone do cliente, e contém um ou mais produtos associados. Cada produto tem uma quantidade de no mínimo 1 (um). O valor total do pedido deve ser calculado. O pedido quando é cadastrado está inicialmente no status 'aberto', e muda para o status 'fechado' quando é entregue ao cliente. Tanto a data e hora de abertura e fechamento do pedido devem ser registrados.
+
+- Pedido pré-definido (pacote): é como um pedido normal, mas possui um composição pré-definida de produtos e quantidades. Seu preço final também é predeterminado no momento do cadastro. 
+
+- Cliente: possui um nome e telefone obrigatoriamente. O endereço é um dado opcional. 
 
 ## Estrutura básica do projeto
 
